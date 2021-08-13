@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: TheKit <nekit1000@gmail.com>
+Date: Mon, 17 May 2021 19:37:29 +0300
+Subject: [PATCH] MakeParentHierarchy: avoid race-condition between stat and
+ mkdir calls
+
+---
+ Coordinator.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Coordinator.cpp b/Coordinator.cpp
+index 799c1c30..ef4d2e11 100644
+--- a/Coordinator.cpp
++++ b/Coordinator.cpp
+@@ -931,7 +931,7 @@ bool Coordinator::MakeParentHierarchy(const std::string &path) {
+             }
+ 
+             int res = mkdir(partial.c_str(), kMode);
+-            if (res < 0) {
++            if (res < 0 && errno != EEXIST) {
+                 return false;
+             }
+         } else if (!S_ISDIR(st.st_mode)) {
+-- 
+2.31.1
+

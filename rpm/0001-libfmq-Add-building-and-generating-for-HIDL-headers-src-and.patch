@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Marius Gripsgard <marius@ubports.com>
+Date: Fri, 2 Nov 2018 19:24:25 +0100
+Subject: [PATCH] Add building and generating for HIDL headers, src and
+ libraries
+
+---
+ EventFlag.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/EventFlag.cpp b/EventFlag.cpp
+index cb101bd..5cf27e7 100644
+--- a/EventFlag.cpp
++++ b/EventFlag.cpp
+@@ -17,6 +17,7 @@
+ #define LOG_TAG "FMQ_EventFlags"
+ 
+ #include <linux/futex.h>
++#include <limits.h>
+ #include <string.h>
+ #include <sys/mman.h>
+ #include <sys/syscall.h>
+-- 
+2.31.1
+

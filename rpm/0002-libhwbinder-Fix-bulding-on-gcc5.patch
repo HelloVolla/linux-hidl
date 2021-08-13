@@ -1,0 +1,104 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Marius Gripsgard <marius@ubports.com>
+Date: Tue, 6 Nov 2018 01:22:41 +0100
+Subject: [PATCH] Fix bulding on gcc5
+
+---
+ IPCThreadState.cpp |  2 +-
+ Parcel.cpp         | 28 ++++++++++++++--------------
+ ProcessState.cpp   |  5 ++---
+ 3 files changed, 17 insertions(+), 18 deletions(-)
+
+diff --git a/IPCThreadState.cpp b/IPCThreadState.cpp
+index 4c0ac6db8653c417461c21cc6aa163c239a26636..d36c32e1aa356a7c843c4524d9545193f70816d8 100644
+--- a/IPCThreadState.cpp
++++ b/IPCThreadState.cpp
+@@ -1190,7 +1190,7 @@ status_t IPCThreadState::executeCommand(int32_t cmd)
+                 reply_sent = true;
+                 if ((tr.flags & TF_ONE_WAY) == 0) {
+                     replyParcel.setError(NO_ERROR);
+-                    sendReply(replyParcel, 0);
++                    this->sendReply(replyParcel, 0);
+                 } else {
+                     ALOGE("Not sending reply in one-way transaction");
+                 }
+diff --git a/Parcel.cpp b/Parcel.cpp
+index 31e95b8dfbb544db59f61393ccec3fd5a9d18ff8..8dd5b36a9992b3070e9f5d6638b96a508403099c 100644
+--- a/Parcel.cpp
++++ b/Parcel.cpp
+@@ -845,9 +845,9 @@ status_t Parcel::writeEmbeddedBuffer(
+         return BAD_VALUE;
+     binder_buffer_object obj = {
+         .hdr = { .type = BINDER_TYPE_PTR },
++        .flags = BINDER_BUFFER_FLAG_HAS_PARENT,
+         .buffer = reinterpret_cast<binder_uintptr_t>(buffer),
+         .length = length,
+-        .flags = BINDER_BUFFER_FLAG_HAS_PARENT,
+         .parent = parent_buffer_handle,
+         .parent_offset = parent_offset,
+     };
+@@ -864,9 +864,9 @@ status_t Parcel::writeBuffer(const void *buffer, size_t length, size_t *handle)
+         buffer, length, mObjectsSize);
+     binder_buffer_object obj {
+         .hdr = { .type = BINDER_TYPE_PTR },
++        .flags = 0,
+         .buffer = reinterpret_cast<binder_uintptr_t>(buffer),
+         .length = length,
+-        .flags = 0,
+     };
+     if (handle != nullptr) {
+         // We use an index into mObjects as a handle
+@@ -966,12 +966,13 @@ status_t Parcel::writeEmbeddedNullReference(size_t * handle,
+         return status;
+     if(!validateBufferParent(parent_buffer_handle, parent_offset))
+         return BAD_VALUE;
+-    binder_buffer_object obj {
+-        .hdr = { .type = BINDER_TYPE_PTR, },
+-        .flags = BINDER_BUFFER_FLAG_REF | BINDER_BUFFER_FLAG_HAS_PARENT,
+-        .parent = parent_buffer_handle,
+-        .parent_offset = parent_offset,
+-    };
++
++    binder_buffer_object obj;
++    obj.hdr.type = BINDER_TYPE_PTR;
++    obj.flags = BINDER_BUFFER_FLAG_REF | BINDER_BUFFER_FLAG_HAS_PARENT;
++    obj.parent = parent_buffer_handle;
++    obj.parent_offset = parent_offset;
++
+     if (handle != nullptr) {
+         // We use an index into mObjects as a handle
+         *handle = mObjectsSize;
+@@ -1080,12 +1081,11 @@ status_t Parcel::writeNativeHandleNoDup(const native_handle_t *handle,
+         return status;
+     }
+ 
+-    struct binder_fd_array_object fd_array {
+-        .hdr = { .type = BINDER_TYPE_FDA },
+-        .num_fds = static_cast<binder_size_t>(handle->numFds),
+-        .parent = buffer_handle,
+-        .parent_offset = offsetof(native_handle_t, data),
+-    };
++    struct binder_fd_array_object fd_array;
++    fd_array.hdr.type = BINDER_TYPE_FDA;
++    fd_array.num_fds = static_cast<binder_size_t>(handle->numFds);
++    fd_array.parent = buffer_handle;
++    fd_array.parent_offset = offsetof(native_handle_t, data);
+ 
+     return writeObject(fd_array);
+ }
+diff --git a/ProcessState.cpp b/ProcessState.cpp
+index 8a8b7ccc3460abdc8c5110c8f4577442766b471d..c7b4e00ea6b17d4b407aeaed6f365f4e1e4d67b8 100644
+--- a/ProcessState.cpp
++++ b/ProcessState.cpp
+@@ -167,9 +167,8 @@ bool ProcessState::becomeContextManager(context_check_func checkFunc, void* user
+         mBinderContextCheckFunc = checkFunc;
+         mBinderContextUserData = userData;
+ 
+-        flat_binder_object obj {
+-            .flags = FLAT_BINDER_FLAG_TXN_SECURITY_CTX,
+-        };
++        flat_binder_object obj;
++        obj.flags = FLAT_BINDER_FLAG_TXN_SECURITY_CTX;
+ 
+         status_t result = ioctl(mDriverFD, BINDER_SET_CONTEXT_MGR_EXT, &obj);
+ 

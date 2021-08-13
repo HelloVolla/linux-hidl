@@ -1,0 +1,101 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: TheKit <nekit1000@gmail.com>
+Date: Sun, 16 May 2021 01:20:55 +0300
+Subject: [PATCH] liblog: fix compilation with GCC 5
+
+---
+ liblog/fake_writer.cpp  | 15 ++++++++-------
+ liblog/logger.h         |  5 +++++
+ liblog/logger_write.cpp |  5 +++++
+ liblog/stderr_write.cpp | 15 ++++++++-------
+ 4 files changed, 26 insertions(+), 14 deletions(-)
+
+diff --git a/liblog/fake_writer.cpp b/liblog/fake_writer.cpp
+index c0b0e69a5..baf9fb7b9 100644
+--- a/liblog/fake_writer.cpp
++++ b/liblog/fake_writer.cpp
+@@ -32,13 +32,14 @@ static int fakeWrite(log_id_t log_id, struct timespec* ts, struct iovec* vec, si
+ static int logFds[(int)LOG_ID_MAX] = {-1, -1, -1, -1, -1, -1};
+ 
+ struct android_log_transport_write fakeLoggerWrite = {
+-    .node = {&fakeLoggerWrite.node, &fakeLoggerWrite.node},
+-    .context.priv = &logFds,
+-    .name = "fake",
+-    .available = NULL,
+-    .open = fakeOpen,
+-    .close = fakeClose,
+-    .write = fakeWrite,
++    {&fakeLoggerWrite.node, &fakeLoggerWrite.node}, /* node */
++    "fake", /* name */
++    0, /* logMask */
++    &logFds, /* context */
++    NULL, /* available */
++    fakeOpen,
++    fakeClose,
++    fakeWrite,
+ };
+ 
+ static int fakeOpen() {
+diff --git a/liblog/logger.h b/liblog/logger.h
+index 1f632c037..294545718 100644
+--- a/liblog/logger.h
++++ b/liblog/logger.h
+@@ -16,7 +16,12 @@
+ 
+ #pragma once
+ 
++#ifdef __cplusplus
++#include <atomic>
++using namespace std;
++#else
+ #include <stdatomic.h>
++#endif
+ #include <stdbool.h>
+ 
+ #include <cutils/list.h>
+diff --git a/liblog/logger_write.cpp b/liblog/logger_write.cpp
+index 7fa3f436b..76e63b3da 100644
+--- a/liblog/logger_write.cpp
++++ b/liblog/logger_write.cpp
+@@ -15,7 +15,12 @@
+  */
+ 
+ #include <errno.h>
++#ifdef __cplusplus
++#include <atomic>
++using namespace std;
++#else
+ #include <stdatomic.h>
++#endif
+ #include <stdlib.h>
+ #include <string.h>
+ #include <sys/time.h>
+diff --git a/liblog/stderr_write.cpp b/liblog/stderr_write.cpp
+index e324a7c65..0ba152a62 100644
+--- a/liblog/stderr_write.cpp
++++ b/liblog/stderr_write.cpp
+@@ -55,13 +55,14 @@ struct stderrContext {
+ };
+ 
+ struct android_log_transport_write stderrLoggerWrite = {
+-    .node = {&stderrLoggerWrite.node, &stderrLoggerWrite.node},
+-    .context.priv = NULL,
+-    .name = "stderr",
+-    .available = stderrAvailable,
+-    .open = stderrOpen,
+-    .close = stderrClose,
+-    .write = stderrWrite,
++    {&stderrLoggerWrite.node, &stderrLoggerWrite.node}, /* node */
++    "stderr", /* name */
++    0, /* logMask */
++    NULL, /* context */
++    stderrAvailable,
++    stderrOpen,
++    stderrClose,
++    stderrWrite,
+ };
+ 
+ static int stderrOpen() {
+-- 
+2.31.1
+

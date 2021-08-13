@@ -1,0 +1,135 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Marius Gripsgard <marius@ubports.com>
+Date: Fri, 2 Nov 2018 19:24:25 +0100
+Subject: [PATCH] Add building and generating for HIDL headers, src and
+ libraries
+
+---
+ Coordinator.cpp       | 1 +
+ EnumType.cpp          | 1 +
+ HidlTypeAssertion.cpp | 1 +
+ generateCpp.cpp       | 4 ++--
+ hidl-gen_l.ll         | 9 ++++++++-
+ hidl-gen_y.yy         | 7 ++++---
+ main.cpp              | 1 +
+ 7 files changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/src/hidl/Coordinator.cpp b/src/hidl/Coordinator.cpp
+index ab693f68..799c1c30 100644
+--- a/src/hidl/Coordinator.cpp
++++ b/src/hidl/Coordinator.cpp
+@@ -21,6 +21,7 @@
+ 
+ #include <algorithm>
+ #include <iterator>
++#include <cstring>
+ 
+ #include <android-base/logging.h>
+ #include <hidl-hash/Hash.h>
+diff --git a/EnumType.cpp b/EnumType.cpp
+index 32682645..08d41382 100644
+--- a/src/hidl/EnumType.cpp
++++ b/src/hidl/EnumType.cpp
+@@ -17,6 +17,7 @@
+ #include "EnumType.h"
+ 
+ #include <hidl-util/Formatter.h>
++#include <algorithm>
+ #include <inttypes.h>
+ #include <iostream>
+ #include <unordered_map>
+diff --git a/src/hidl/HidlTypeAssertion.cpp b/src/hidl/HidlTypeAssertion.cpp
+index 6e4822ad..c6840547 100644
+--- a/src/hidl/HidlTypeAssertion.cpp
++++ b/src/hidl/HidlTypeAssertion.cpp
+@@ -18,6 +18,7 @@
+ 
+ #include <hidl-util/Formatter.h>
+ 
++#include <algorithm>
+ #include <string>
+ #include <vector>
+ 
+diff --git a/src/hidl/generateCpp.cpp b/src/hidl/generateCpp.cpp
+index 06110ca1..ac756382 100644
+--- a/src/hidl/generateCpp.cpp
++++ b/src/hidl/generateCpp.cpp
+@@ -1909,8 +1909,8 @@ void AST::generateCppAtraceCall(Formatter &out,
+         // this isn't done for server because the profiled code isn't alone in its scope
+         // this isn't done for passthrough becuase the profiled boundary isn't even in the same code
+         case CLIENT_API_ENTRY: {
+-            out << "::android::ScopedTrace PASTE(___tracer, __LINE__) (ATRACE_TAG_HAL, \""
+-                << baseString + "::client\");\n";
++            /*out << "::android::ScopedTrace PASTE(___tracer, __LINE__) (ATRACE_TAG_HAL, \""
++                << baseString + "::client\");\n";*/
+             break;
+         }
+         case CLIENT_API_EXIT:
+diff --git a/src/hidl/hidl-gen_l.ll b/src/hidl/hidl-gen_l.ll
+index 835d8f67..f1c603e9 100644
+--- a/src/hidl/hidl-gen_l.ll
++++ b/src/hidl/hidl-gen_l.ll
+@@ -48,7 +48,14 @@ FQNAME              ({COMPONENT}|{VERSION})(({DOT}|":"+){COMPONENT}|{VERSION})*
+ #include "RefType.h"
+ #include "FmqType.h"
+ 
+-#include "hidl-gen_y.h"
++#include "hidl-gen_y.hpp"
++
++#ifndef YYSTYPE
++# define YYSTYPE yy::parser::semantic_type
++#endif
++#ifndef YYLTYPE
++# define YYLTYPE yy::parser::location_type
++#endif
+ 
+ #include <assert.h>
+ 
+diff --git a/src/hidl/hidl-gen_y.yy b/src/hidl/hidl-gen_y.yy
+index 65f43232..a1995115 100644
+--- a/src/hidl/hidl-gen_y.yy
++++ b/src/hidl/hidl-gen_y.yy
+@@ -31,11 +31,12 @@
+ #include "TypeDef.h"
+ #include "VectorType.h"
+ 
+-#include "hidl-gen_y.h"
++#include "hidl-gen_y.hpp"
+ 
+ #include <android-base/logging.h>
+ #include <hidl-util/FQName.h>
+ #include <hidl-util/StringHelper.h>
++#include <algorithm>
+ #include <stdio.h>
+ 
+ using namespace android;
+@@ -217,12 +218,12 @@ bool isValidTypeName(const std::string& identifier, std::string *errorMsg) {
+ %parse-param { android::Scope** const scope }
+ %lex-param { void* scanner }
+ %lex-param { android::Scope** const scope }
+-%pure-parser
++//%define api.pure
+ %glr-parser
+ %skeleton "glr.cc"
+ 
+ %expect-rr 0
+-%error-verbose
++%define parse.error verbose
+ 
+ %debug
+ 
+diff --git a/src/hidl/main.cpp b/src/hidl/main.cpp
+index c03b6fcd..17c19628 100644
+--- a/src/hidl/main.cpp
++++ b/src/hidl/main.cpp
+@@ -29,6 +29,7 @@
+ #include <unistd.h>
+ #include <iostream>
+ #include <set>
++#include <cstring>
+ #include <string>
+ #include <vector>
+ 
+-- 
+2.30.1
+

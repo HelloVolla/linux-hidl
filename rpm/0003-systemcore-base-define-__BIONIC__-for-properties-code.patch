@@ -1,0 +1,53 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: TheKit <nekit1000@gmail.com>
+Date: Sat, 15 May 2021 00:00:59 +0300
+Subject: [PATCH] base: define __BIONIC__ for properties code
+
+---
+ base/include/android-base/properties.h | 8 ++++----
+ base/properties.cpp                    | 2 ++
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/base/include/android-base/properties.h b/base/include/android-base/properties.h
+index 31e52731d..6134f7647 100644
+--- a/base/include/android-base/properties.h
++++ b/base/include/android-base/properties.h
+@@ -57,18 +57,18 @@ bool SetProperty(const std::string& key, const std::string& value);
+ // Waits for the system property `key` to have the value `expected_value`.
+ // Times out after `relative_timeout`.
+ // Returns true on success, false on timeout.
+-#if defined(__BIONIC__)
++//#if defined(__BIONIC__)
+ bool WaitForProperty(const std::string& key, const std::string& expected_value,
+                      std::chrono::milliseconds relative_timeout = std::chrono::milliseconds::max());
+-#endif
++//#endif
+ 
+ // Waits for the system property `key` to be created.
+ // Times out after `relative_timeout`.
+ // Returns true on success, false on timeout.
+-#if defined(__BIONIC__)
++//#if defined(__BIONIC__)
+ bool WaitForPropertyCreation(const std::string& key, std::chrono::milliseconds relative_timeout =
+                                                          std::chrono::milliseconds::max());
+-#endif
++//#endif
+ 
+ } // namespace base
+ } // namespace android
+diff --git a/base/properties.cpp b/base/properties.cpp
+index d5a5918ce..c7ca1f0e3 100644
+--- a/base/properties.cpp
++++ b/base/properties.cpp
+@@ -16,6 +16,8 @@
+ 
+ #include "android-base/properties.h"
+ 
++#define __BIONIC__ 1
++
+ #if defined(__BIONIC__)
+ #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
+ #include <sys/system_properties.h>
+-- 
+2.30.1
+

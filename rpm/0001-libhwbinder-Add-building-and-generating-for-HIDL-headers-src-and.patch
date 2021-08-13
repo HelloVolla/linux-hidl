@@ -1,0 +1,86 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Marius Gripsgard <marius@ubports.com>
+Date: Fri, 2 Nov 2018 19:24:25 +0100
+Subject: [PATCH] Add building and generating for HIDL headers, src and
+ libraries
+
+---
+ Binder.cpp                | 2 +-
+ BpHwBinder.cpp            | 4 ++--
+ IPCThreadState.cpp        | 4 ++--
+ Parcel.cpp                | 5 +++++
+ include/hwbinder/Parcel.h | 1 +
+ 5 files changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/Binder.cpp b/Binder.cpp
+index 87bc14333106625d4736609422c91efd89207db9..a084b48860ad4d571e6289bdad82670b948af09b 100644
+--- a/Binder.cpp
++++ b/Binder.cpp
+@@ -22,7 +22,7 @@
+ #include <hwbinder/IInterface.h>
+ #include <hwbinder/Parcel.h>
+ 
+-#include <sched.h>
++#include <linux/sched.h>
+ #include <stdio.h>
+ 
+ namespace android {
+diff --git a/BpHwBinder.cpp b/BpHwBinder.cpp
+index aacbc8dfb38a5ec50eba0b0c6d8be7120882d1e8..6821748122804a32e9bdafbe9223990cae538fce 100644
+--- a/BpHwBinder.cpp
++++ b/BpHwBinder.cpp
+@@ -295,9 +295,9 @@ void BpHwBinder::onFirstRef()
+ void BpHwBinder::onLastStrongRef(const void* /*id*/)
+ {
+     ALOGV("onLastStrongRef BpHwBinder %p handle %d\n", this, mHandle);
+-    IF_ALOGV() {
++    /*IF_ALOGV() {
+         printRefs();
+-    }
++    }*/
+     IPCThreadState* ipc = IPCThreadState::self();
+     if (ipc) {
+         ipc->decStrongHandle(mHandle);
+diff --git a/IPCThreadState.cpp b/IPCThreadState.cpp
+index 13ae0cd76411dabe228b73959c66862ea90fd58a..4c0ac6db8653c417461c21cc6aa163c239a26636 100644
+--- a/IPCThreadState.cpp
++++ b/IPCThreadState.cpp
+@@ -648,8 +648,8 @@ status_t IPCThreadState::transact(int32_t handle,
+         if (UNLIKELY(mCallRestriction != ProcessState::CallRestriction::NONE)) {
+             if (mCallRestriction == ProcessState::CallRestriction::ERROR_IF_NOT_ONEWAY) {
+                 ALOGE("Process making non-oneway call but is restricted.");
+-                CallStack::logStack("non-oneway call", CallStack::getCurrent(10).get(),
+-                    ANDROID_LOG_ERROR);
++                /*CallStack::logStack("non-oneway call", CallStack::getCurrent(10).get(),
++                    ANDROID_LOG_ERROR);*/
+             } else /* FATAL_IF_NOT_ONEWAY */ {
+                 LOG_ALWAYS_FATAL("Process may not make oneway calls.");
+             }
+diff --git a/Parcel.cpp b/Parcel.cpp
+index e769b1f2d50be73b79f0e7e131abce287fc9d0a0..31e95b8dfbb544db59f61393ccec3fd5a9d18ff8 100644
+--- a/Parcel.cpp
++++ b/Parcel.cpp
+@@ -29,6 +29,11 @@
+ #include <sys/types.h>
+ #include <sys/resource.h>
+ #include <unistd.h>
++#if defined(__LP64__)
++#define SIZE_T_MAX ULONG_MAX
++#else
++#define SIZE_T_MAX UINT_MAX
++#endif
+ 
+ #include <hwbinder/Binder.h>
+ #include <hwbinder/BpHwBinder.h>
+diff --git a/include/hwbinder/Parcel.h b/include/hwbinder/Parcel.h
+index f6e45d5bae8a3123416ae1d76e5d330c35ce3694..01aceaf66bff85f4439838278cded7b99a319a0d 100644
+--- a/include/hwbinder/Parcel.h
++++ b/include/hwbinder/Parcel.h
+@@ -19,6 +19,7 @@
+ 
+ #include <string>
+ #include <vector>
++#include <memory>
+ 
+ #include <cutils/native_handle.h>
+ #include <utils/Errors.h>

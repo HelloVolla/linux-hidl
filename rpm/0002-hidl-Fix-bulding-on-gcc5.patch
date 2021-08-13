@@ -1,0 +1,105 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Marius Gripsgard <marius@ubports.com>
+Date: Tue, 6 Nov 2018 01:22:41 +0100
+Subject: [PATCH] Fix bulding on gcc5
+
+---
+ Interface.cpp | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/Interface.cpp b/Interface.cpp
+index b0ffa34d..1a9d4cec 100644
+--- a/Interface.cpp
++++ b/Interface.cpp
+@@ -265,7 +265,7 @@ bool Interface::fillDescriptorChainMethod(Method *method) const {
+     method->fillImplementation(
+         HIDL_DESCRIPTOR_CHAIN_TRANSACTION,
+         { { IMPL_INTERFACE, [this](auto &out) {
+-            std::vector<const Interface *> chain = typeChain();
++            std::vector<const Interface *> chain = this->typeChain();
+             out << "_hidl_cb(";
+             out.block([&] {
+                 for (const Interface *iface : chain) {
+@@ -276,7 +276,7 @@ bool Interface::fillDescriptorChainMethod(Method *method) const {
+             out << "return ::android::hardware::Void();";
+         } } }, /* cppImpl */
+         { { IMPL_INTERFACE, [this](auto &out) {
+-            std::vector<const Interface *> chain = typeChain();
++            std::vector<const Interface *> chain = this->typeChain();
+             out << "return new java.util.ArrayList<String>(java.util.Arrays.asList(\n";
+             out.indent(); out.indent();
+             for (size_t i = 0; i < chain.size(); ++i) {
+@@ -320,23 +320,23 @@ bool Interface::fillHashChainMethod(Method *method) const {
+     method->fillImplementation(
+         HIDL_HASH_CHAIN_TRANSACTION,
+         { { IMPL_INTERFACE, [this, digestType](auto &out) {
+-            std::vector<const Interface *> chain = typeChain();
++            std::vector<const Interface *> chain = this->typeChain();
+             out << "_hidl_cb(";
+             out.block([&] {
+-                emitDigestChain(out, "(" + digestType->getInternalDataCppType() + ")", chain,
++                this->emitDigestChain(out, "(const " + digestType->getInternalDataCppType() + ")", chain,
+                                 [](const auto& e) { return e->cppValue(); });
+             });
+             out << ");\n";
+             out << "return ::android::hardware::Void();\n";
+         } } }, /* cppImpl */
+         { { IMPL_INTERFACE, [this, digestType, chainType](auto &out) {
+-            std::vector<const Interface *> chain = typeChain();
++            std::vector<const Interface *> chain = this->typeChain();
+             out << "return new "
+                 << chainType->getJavaType(false /* forInitializer */)
+                 << "(java.util.Arrays.asList(\n";
+             out.indent(2, [&] {
+                 // No need for dimensions when elements are explicitly provided.
+-                emitDigestChain(out, "new " + digestType->getJavaType(false /* forInitializer */),
++                this->emitDigestChain(out, "new " + digestType->getJavaType(false /* forInitializer */),
+                                 chain, [](const auto& e) { return e->javaValue(); });
+             });
+             out << "));\n";
+@@ -354,13 +354,13 @@ bool Interface::fillGetDescriptorMethod(Method *method) const {
+         HIDL_GET_DESCRIPTOR_TRANSACTION,
+         { { IMPL_INTERFACE, [this](auto &out) {
+             out << "_hidl_cb("
+-                << fullName()
++                << this->fullName()
+                 << "::descriptor);\n"
+                 << "return ::android::hardware::Void();\n";
+         } } }, /* cppImpl */
+         { { IMPL_INTERFACE, [this](auto &out) {
+             out << "return "
+-                << fullJavaName()
++                << this->fullJavaName()
+                 << ".kInterfaceName;\n";
+         } } } /* javaImpl */
+     );
+@@ -372,7 +372,7 @@ bool Interface::fillGetDebugInfoMethod(Method *method) const {
+         return false;
+     }
+ 
+-    static const std::string sArch =
++    const std::string sArch =
+             "#if defined(__LP64__)\n"
+             "::android::hidl::base::V1_0::DebugInfo::Architecture::IS_64BIT\n"
+             "#else\n"
+@@ -383,7 +383,7 @@ bool Interface::fillGetDebugInfoMethod(Method *method) const {
+         HIDL_GET_REF_INFO_TRANSACTION,
+         {
+             {IMPL_INTERFACE,
+-                [](auto &out) {
++                [sArch](auto &out) {
+                     // getDebugInfo returns N/A for local objects.
+                     out << "::android::hidl::base::V1_0::DebugInfo info = {};\n";
+                     out << "info.pid = -1;\n";
+@@ -394,7 +394,7 @@ bool Interface::fillGetDebugInfoMethod(Method *method) const {
+                 }
+             },
+             {IMPL_STUB_IMPL,
+-                [](auto &out) {
++                [sArch](auto &out) {
+                     out << "::android::hidl::base::V1_0::DebugInfo info = {};\n";
+                     out << "info.pid = ::android::hardware::details::getPidIfSharable();\n";
+                     out << "info.ptr = ::android::hardware::details::debuggable()"
+-- 
+2.30.1
+

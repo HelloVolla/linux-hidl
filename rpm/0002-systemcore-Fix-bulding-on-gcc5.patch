@@ -1,0 +1,193 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Marius Gripsgard <marius@ubports.com>
+Date: Tue, 6 Nov 2018 01:22:41 +0100
+Subject: [PATCH] Fix bulding on gcc5
+
+---
+ base/cmsg.cpp                           | 11 +++---
+ base/include/android-base/collections.h |  4 +--
+ base/include/android-base/logging.h     |  7 ++++
+ base/include/android-base/strings.h     | 18 ++++++----
+ base/strings.cpp                        | 47 +++++++++++++++++--------
+ 5 files changed, 59 insertions(+), 28 deletions(-)
+
+diff --git a/base/cmsg.cpp b/base/cmsg.cpp
+index 42866f8f2..4d03dde35 100644
+--- a/base/cmsg.cpp
++++ b/base/cmsg.cpp
+@@ -21,6 +21,9 @@
+ #include <stdlib.h>
+ #include <sys/socket.h>
+ #include <sys/user.h>
++#ifndef PAGE_SIZE
++#define PAGE_SIZE sysconf(_SC_PAGE_SIZE)
++#endif
+ 
+ #include <memory>
+ 
+@@ -131,10 +134,10 @@ ssize_t ReceiveFileDescriptorVector(int sockfd, void* data, size_t len, size_t m
+ // CMSG_LEN is somehow not constexpr on darwin.
+ #define CMSG_ASSERT CHECK
+ #endif
+-    CMSG_ASSERT(CMSG_LEN(0) + 1 * sizeof(int) == CMSG_LEN(1 * sizeof(int)));
+-    CMSG_ASSERT(CMSG_LEN(0) + 2 * sizeof(int) == CMSG_LEN(2 * sizeof(int)));
+-    CMSG_ASSERT(CMSG_LEN(0) + 3 * sizeof(int) == CMSG_LEN(3 * sizeof(int)));
+-    CMSG_ASSERT(CMSG_LEN(0) + 4 * sizeof(int) == CMSG_LEN(4 * sizeof(int)));
++    CMSG_ASSERT(CMSG_LEN(0) + 1 * sizeof(int) == CMSG_LEN(1 * sizeof(int)), "");
++    CMSG_ASSERT(CMSG_LEN(0) + 2 * sizeof(int) == CMSG_LEN(2 * sizeof(int)), "");
++    CMSG_ASSERT(CMSG_LEN(0) + 3 * sizeof(int) == CMSG_LEN(3 * sizeof(int)), "");
++    CMSG_ASSERT(CMSG_LEN(0) + 4 * sizeof(int) == CMSG_LEN(4 * sizeof(int)), "");
+ 
+     if (cmsg->cmsg_len % sizeof(int) != 0) {
+       LOG(FATAL) << "cmsg_len(" << cmsg->cmsg_len << ") not aligned to sizeof(int)";
+diff --git a/base/include/android-base/collections.h b/base/include/android-base/collections.h
+index be0683ab9..82d8a85bb 100644
+--- a/base/include/android-base/collections.h
++++ b/base/include/android-base/collections.h
+@@ -47,12 +47,12 @@ void Append(CollectionType& collection, T&& arg, Args&&... args) {
+ // after std::decay.
+ template <typename T, typename Arg, typename... Args>
+ void AssertType(Arg&&) {
+-  static_assert(std::is_same<T, typename std::decay<Arg>::type>::value);
++  static_assert(std::is_same<T, typename std::decay<Arg>::type>::value, "");
+ }
+ 
+ template <typename T, typename Arg, typename... Args>
+ void AssertType(Arg&&, Args&&... args) {
+-  static_assert(std::is_same<T, typename std::decay<Arg>::type>::value);
++  static_assert(std::is_same<T, typename std::decay<Arg>::type>::value, "");
+   AssertType<T>(std::forward<Args>(args)...);
+ }
+ 
+diff --git a/base/include/android-base/logging.h b/base/include/android-base/logging.h
+index f94cc258e..34a320703 100644
+--- a/base/include/android-base/logging.h
++++ b/base/include/android-base/logging.h
+@@ -482,14 +482,21 @@ namespace std {
+ // Note: to print the pointer, use "<< static_cast<const void*>(string_pointer)" instead.
+ // Note: a not-recommended alternative is to let Clang ignore the warning by adding
+ //       -Wno-user-defined-warnings to CPPFLAGS.
++#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wgcc-compat"
+ #define OSTREAM_STRING_POINTER_USAGE_WARNING \
+     __attribute__((diagnose_if(true, "Unexpected logging of string pointer", "warning")))
++#else
++#define OSTREAM_STRING_POINTER_USAGE_WARNING /* empty */
++#endif
+ inline std::ostream& operator<<(std::ostream& stream, const std::string* string_pointer)
+     OSTREAM_STRING_POINTER_USAGE_WARNING {
+   return stream << static_cast<const void*>(string_pointer);
+ }
++#ifdef __clang__
+ #pragma clang diagnostic pop
++#endif
++#undef OSTREAM_STRING_POINTER_USAGE_WARNING
+ 
+ }  // namespace std
+diff --git a/base/include/android-base/strings.h b/base/include/android-base/strings.h
+index 8e9716f9f..9c3556084 100644
+--- a/base/include/android-base/strings.h
++++ b/base/include/android-base/strings.h
+@@ -56,17 +56,21 @@ extern template std::string Join(const std::vector<std::string>&, const std::str
+ extern template std::string Join(const std::vector<const char*>&, const std::string&);
+ 
+ // Tests whether 's' starts with 'prefix'.
+-bool StartsWith(std::string_view s, std::string_view prefix);
+-bool StartsWith(std::string_view s, char prefix);
+-bool StartsWithIgnoreCase(std::string_view s, std::string_view prefix);
++// TODO: string_view
++bool StartsWith(const std::string& s, const char* prefix);
++bool StartsWithIgnoreCase(const std::string& s, const char* prefix);
++bool StartsWith(const std::string& s, const std::string& prefix);
++bool StartsWithIgnoreCase(const std::string& s, const std::string& prefix);
+ 
+ // Tests whether 's' ends with 'suffix'.
+-bool EndsWith(std::string_view s, std::string_view suffix);
+-bool EndsWith(std::string_view s, char suffix);
+-bool EndsWithIgnoreCase(std::string_view s, std::string_view suffix);
++// TODO: string_view
++bool EndsWith(const std::string& s, const char* suffix);
++bool EndsWithIgnoreCase(const std::string& s, const char* suffix);
++bool EndsWith(const std::string& s, const std::string& suffix);
++bool EndsWithIgnoreCase(const std::string& s, const std::string& suffix);
+ 
+ // Tests whether 'lhs' equals 'rhs', ignoring case.
+-bool EqualsIgnoreCase(std::string_view lhs, std::string_view rhs);
++bool EqualsIgnoreCase(const std::string& lhs, const std::string& rhs);
+ 
+ }  // namespace base
+ }  // namespace android
+diff --git a/base/strings.cpp b/base/strings.cpp
+index bb3167ef0..a8bb2a986 100644
+--- a/base/strings.cpp
++++ b/base/strings.cpp
+@@ -87,33 +87,50 @@ template std::string Join(const std::vector<const char*>&, char);
+ template std::string Join(const std::vector<std::string>&, const std::string&);
+ template std::string Join(const std::vector<const char*>&, const std::string&);
+ 
+-bool StartsWith(std::string_view s, std::string_view prefix) {
+-  return s.substr(0, prefix.size()) == prefix;
++bool StartsWith(const std::string& s, const char* prefix) {
++  return strncmp(s.c_str(), prefix, strlen(prefix)) == 0;
+ }
+ 
+-bool StartsWith(std::string_view s, char prefix) {
+-  return !s.empty() && s.front() == prefix;
++bool StartsWith(const std::string& s, const std::string& prefix) {
++  return strncmp(s.c_str(), prefix.c_str(), prefix.size()) == 0;
+ }
+ 
+-bool StartsWithIgnoreCase(std::string_view s, std::string_view prefix) {
+-  return s.size() >= prefix.size() && strncasecmp(s.data(), prefix.data(), prefix.size()) == 0;
++bool StartsWithIgnoreCase(const std::string& s, const char* prefix) {
++  return strncasecmp(s.c_str(), prefix, strlen(prefix)) == 0;
+ }
+ 
+-bool EndsWith(std::string_view s, std::string_view suffix) {
+-  return s.size() >= suffix.size() && s.substr(s.size() - suffix.size(), suffix.size()) == suffix;
++bool StartsWithIgnoreCase(const std::string& s, const std::string& prefix) {
++  return strncasecmp(s.c_str(), prefix.c_str(), prefix.size()) == 0;
+ }
+ 
+-bool EndsWith(std::string_view s, char suffix) {
+-  return !s.empty() && s.back() == suffix;
++static bool EndsWith(const std::string& s, const char* suffix, size_t suffix_length,
++                     bool case_sensitive) {
++  size_t string_length = s.size();
++  if (suffix_length > string_length) {
++    return false;
++  }
++  size_t offset = string_length - suffix_length;
++  return (case_sensitive ? strncmp : strncasecmp)(s.c_str() + offset, suffix, suffix_length) == 0;
++}
++
++bool EndsWith(const std::string& s, const char* suffix) {
++  return EndsWith(s, suffix, strlen(suffix), true);
++}
++
++bool EndsWith(const std::string& s, const std::string& suffix) {
++  return EndsWith(s, suffix.c_str(), suffix.size(), true);
++}
++
++bool EndsWithIgnoreCase(const std::string& s, const char* suffix) {
++  return EndsWith(s, suffix, strlen(suffix), false);
+ }
+ 
+-bool EndsWithIgnoreCase(std::string_view s, std::string_view suffix) {
+-  return s.size() >= suffix.size() &&
+-         strncasecmp(s.data() + (s.size() - suffix.size()), suffix.data(), suffix.size()) == 0;
++bool EndsWithIgnoreCase(const std::string& s, const std::string& suffix) {
++  return EndsWith(s, suffix.c_str(), suffix.size(), false);
+ }
+ 
+-bool EqualsIgnoreCase(std::string_view lhs, std::string_view rhs) {
+-  return lhs.size() == rhs.size() && strncasecmp(lhs.data(), rhs.data(), lhs.size()) == 0;
++bool EqualsIgnoreCase(const std::string& lhs, const std::string& rhs) {
++  return strcasecmp(lhs.c_str(), rhs.c_str()) == 0;
+ }
+ 
+ }  // namespace base
+-- 
+2.30.1
+

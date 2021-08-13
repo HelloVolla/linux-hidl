@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Marius Gripsgard <marius@ubports.com>
+Date: Mon, 12 Nov 2018 08:46:26 +0100
+Subject: [PATCH] Make sure we define __ANDROID__ in hwbinder
+
+---
+ IPCThreadState.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/IPCThreadState.cpp b/IPCThreadState.cpp
+index d36c32e1aa356a7c843c4524d9545193f70816d8..c74bec804715aee68a8b08877004a610ff7ca099 100644
+--- a/IPCThreadState.cpp
++++ b/IPCThreadState.cpp
+@@ -43,6 +43,8 @@
+ #include <sys/resource.h>
+ #include <unistd.h>
+ 
++#define __ANDROID__ 1
++
+ #if LOG_NDEBUG
+ 
+ #define IF_LOG_TRANSACTIONS() if (false)
