@@ -10,10 +10,10 @@ Subject: [PATCH] Fix bulding on gcc5
  transport/include/hidl/ConcurrentMap.h | 1 +
  4 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/base/include/hidl/HidlSupport.h b/base/include/hidl/HidlSupport.h
+diff --git a/src/libhidl/base/include/hidl/HidlSupport.h b/src/libhidl/base/include/hidl/HidlSupport.h
 index 93a625122b0b75d212a151a3df4c8020c274692f..82f7983a4849c5963600a610fd3d73f7e08a28c4 100644
---- a/base/include/hidl/HidlSupport.h
-+++ b/base/include/hidl/HidlSupport.h
+--- a/src/libhidl/base/include/hidl/HidlSupport.h
++++ b/src/libhidl/base/include/hidl/HidlSupport.h
 @@ -523,7 +523,7 @@ struct hidl_vec {
      }
  
@@ -34,10 +34,10 @@ index 93a625122b0b75d212a151a3df4c8020c274692f..82f7983a4849c5963600a610fd3d73f7
  
  ////////////////////////////////////////////////////////////////////////////////
  
-diff --git a/base/include/hidl/Status.h b/base/include/hidl/Status.h
+diff --git a/src/libhidl/base/include/hidl/Status.h b/src/libhidl/base/include/hidl/Status.h
 index 817277f76566d356df7bfc3bba9165d3ee49dc78..ac2127ff1301f4c0e1933114d52c0494e89928a0 100644
---- a/base/include/hidl/Status.h
-+++ b/base/include/hidl/Status.h
+--- a/src/libhidl/base/include/hidl/Status.h
++++ b/src/libhidl/base/include/hidl/Status.h
 @@ -247,8 +247,8 @@ public:
      // move-able.
      // precondition: "this" has checked status
@@ -49,10 +49,10 @@ index 817277f76566d356df7bfc3bba9165d3ee49dc78..ac2127ff1301f4c0e1933114d52c0494
  
      ~Return() = default;
  
-diff --git a/transport/ServiceManagement.cpp b/transport/ServiceManagement.cpp
+diff --git a/src/libhidl/transport/ServiceManagement.cpp b/src/libhidl/transport/ServiceManagement.cpp
 index 5415dbb1b8469e15c7c01109c7d3f10409e8e7d4..d4a3b9af078583d7d0db325d7fe86fefe3da947c 100644
---- a/transport/ServiceManagement.cpp
-+++ b/transport/ServiceManagement.cpp
+--- a/src/libhidl/transport/ServiceManagement.cpp
++++ b/src/libhidl/transport/ServiceManagement.cpp
 @@ -483,6 +483,7 @@ struct PassthroughServiceManager : IServiceManager1_1 {
                          if (!implName.empty()) instanceName += " ("s + implName + ")"s;
                          map.emplace(path + lib, InstanceDebugInfo{.interfaceName = matchedName,
@@ -61,10 +61,10 @@ index 5415dbb1b8469e15c7c01109c7d3f10409e8e7d4..d4a3b9af078583d7d0db325d7fe86fef
                                                                    .clientPids = {},
                                                                    .arch = arch});
                      }
-diff --git a/transport/include/hidl/ConcurrentMap.h b/transport/include/hidl/ConcurrentMap.h
+diff --git a/src/libhidl/transport/include/hidl/ConcurrentMap.h b/src/libhidl/transport/include/hidl/ConcurrentMap.h
 index 329752ca97a4adbd1cf31254f0870a03be4e4e87..033fb27bafd5c1f909b51a81dea205a39ec23e24 100644
---- a/transport/include/hidl/ConcurrentMap.h
-+++ b/transport/include/hidl/ConcurrentMap.h
+--- a/src/libhidl/transport/include/hidl/ConcurrentMap.h
++++ b/src/libhidl/transport/include/hidl/ConcurrentMap.h
 @@ -68,6 +68,7 @@ public:
  
      void setLocked(K&& k, V&& v) { mMap[std::forward<K>(k)] = std::forward<V>(v); }

@@ -11,10 +11,10 @@ Subject: [PATCH] Fix bulding on gcc5
  base/strings.cpp                        | 47 +++++++++++++++++--------
  5 files changed, 59 insertions(+), 28 deletions(-)
 
-diff --git a/base/cmsg.cpp b/base/cmsg.cpp
+diff --git a/src/system_core/base/cmsg.cpp b/src/system_core/base/cmsg.cpp
 index 42866f8f2..4d03dde35 100644
---- a/base/cmsg.cpp
-+++ b/base/cmsg.cpp
+--- a/src/system_core/base/cmsg.cpp
++++ b/src/system_core/base/cmsg.cpp
 @@ -21,6 +21,9 @@
  #include <stdlib.h>
  #include <sys/socket.h>
@@ -40,10 +40,10 @@ index 42866f8f2..4d03dde35 100644
  
      if (cmsg->cmsg_len % sizeof(int) != 0) {
        LOG(FATAL) << "cmsg_len(" << cmsg->cmsg_len << ") not aligned to sizeof(int)";
-diff --git a/base/include/android-base/collections.h b/base/include/android-base/collections.h
+diff --git a/src/system_core/base/include/android-base/collections.h b/src/system_core/base/include/android-base/collections.h
 index be0683ab9..82d8a85bb 100644
---- a/base/include/android-base/collections.h
-+++ b/base/include/android-base/collections.h
+--- a/src/system_core/base/include/android-base/collections.h
++++ b/src/system_core/base/include/android-base/collections.h
 @@ -47,12 +47,12 @@ void Append(CollectionType& collection, T&& arg, Args&&... args) {
  // after std::decay.
  template <typename T, typename Arg, typename... Args>
@@ -59,10 +59,10 @@ index be0683ab9..82d8a85bb 100644
    AssertType<T>(std::forward<Args>(args)...);
  }
  
-diff --git a/base/include/android-base/logging.h b/base/include/android-base/logging.h
+diff --git a/src/system_core/base/include/android-base/logging.h b/src/system_core/base/include/android-base/logging.h
 index f94cc258e..34a320703 100644
---- a/base/include/android-base/logging.h
-+++ b/base/include/android-base/logging.h
+--- a/src/system_core/base/include/android-base/logging.h
++++ b/src/system_core/base/include/android-base/logging.h
 @@ -482,14 +482,21 @@ namespace std {
  // Note: to print the pointer, use "<< static_cast<const void*>(string_pointer)" instead.
  // Note: a not-recommended alternative is to let Clang ignore the warning by adding
@@ -85,10 +85,10 @@ index f94cc258e..34a320703 100644
 +#undef OSTREAM_STRING_POINTER_USAGE_WARNING
  
  }  // namespace std
-diff --git a/base/include/android-base/strings.h b/base/include/android-base/strings.h
+diff --git a/src/system_core/base/include/android-base/strings.h b/src/system_core/base/include/android-base/strings.h
 index 8e9716f9f..9c3556084 100644
---- a/base/include/android-base/strings.h
-+++ b/base/include/android-base/strings.h
+--- a/src/system_core/base/include/android-base/strings.h
++++ b/src/system_core/base/include/android-base/strings.h
 @@ -56,17 +56,21 @@ extern template std::string Join(const std::vector<std::string>&, const std::str
  extern template std::string Join(const std::vector<const char*>&, const std::string&);
  
@@ -118,10 +118,10 @@ index 8e9716f9f..9c3556084 100644
  
  }  // namespace base
  }  // namespace android
-diff --git a/base/strings.cpp b/base/strings.cpp
+diff --git a/src/system_core/base/strings.cpp b/src/system_core/base/strings.cpp
 index bb3167ef0..a8bb2a986 100644
---- a/base/strings.cpp
-+++ b/base/strings.cpp
+--- a/src/system_core/base/strings.cpp
++++ b/src/system_core/base/strings.cpp
 @@ -87,33 +87,50 @@ template std::string Join(const std::vector<const char*>&, char);
  template std::string Join(const std::vector<std::string>&, const std::string&);
  template std::string Join(const std::vector<const char*>&, const std::string&);

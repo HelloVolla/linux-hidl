@@ -14,10 +14,10 @@ Subject: [PATCH] Add building and generating for HIDL headers, src and
  libutils/include/utils/ThreadDefs.h |  1 -
  7 files changed, 36 insertions(+), 10 deletions(-)
 
-diff --git a/libcutils/ashmem-dev.cpp b/libcutils/ashmem-dev.cpp
+diff --git a/src/system_core/libcutils/ashmem-dev.cpp b/src/system_core/libcutils/ashmem-dev.cpp
 index e67b45808..42abbccf1 100644
---- a/libcutils/ashmem-dev.cpp
-+++ b/libcutils/ashmem-dev.cpp
+--- a/src/system_core/libcutils/ashmem-dev.cpp
++++ b/src/system_core/libcutils/ashmem-dev.cpp
 @@ -57,6 +57,11 @@
  #define MIN_MEMFD_VENDOR_API_LEVEL 29
  #define MIN_MEMFD_VENDOR_API_LEVEL_CHAR 'Q'
@@ -39,10 +39,10 @@ index e67b45808..42abbccf1 100644
          ret = TEMP_FAILURE_RETRY(ioctl(fd, ASHMEM_SET_NAME, buf));
          if (ret < 0) {
              goto error;
-diff --git a/libcutils/include/cutils/atomic.h b/libcutils/include/cutils/atomic.h
+diff --git a/src/system_core/libcutils/include/cutils/atomic.h b/src/system_core/libcutils/include/cutils/atomic.h
 index 0c88bfedd..84606e307 100644
---- a/libcutils/include/cutils/atomic.h
-+++ b/libcutils/include/cutils/atomic.h
+--- a/src/system_core/libcutils/include/cutils/atomic.h
++++ b/src/system_core/libcutils/include/cutils/atomic.h
 @@ -19,7 +19,13 @@
  
  #include <stdint.h>
@@ -57,10 +57,10 @@ index 0c88bfedd..84606e307 100644
  
  #ifndef ANDROID_ATOMIC_INLINE
  #define ANDROID_ATOMIC_INLINE static inline
-diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
+diff --git a/src/system_core/libcutils/include/cutils/trace.h b/src/system_core/libcutils/include/cutils/trace.h
 index 79b4b355b..e2c4bf513 100644
---- a/libcutils/include/cutils/trace.h
-+++ b/libcutils/include/cutils/trace.h
+--- a/src/system_core/libcutils/include/cutils/trace.h
++++ b/src/system_core/libcutils/include/cutils/trace.h
 @@ -18,7 +18,13 @@
  #define _LIBS_CUTILS_TRACE_H
  
@@ -100,10 +100,10 @@ index 79b4b355b..e2c4bf513 100644
      }
  }
  
-diff --git a/libcutils/trace-dev.inc b/libcutils/trace-dev.inc
+diff --git a/src/system_core/libcutils/trace-dev.inc b/src/system_core/libcutils/trace-dev.inc
 index e3da77bec..076bec303 100644
---- a/libcutils/trace-dev.inc
-+++ b/libcutils/trace-dev.inc
+--- a/src/system_core/libcutils/trace-dev.inc
++++ b/src/system_core/libcutils/trace-dev.inc
 @@ -23,7 +23,12 @@
  #include <fcntl.h>
  #include <limits.h>
@@ -135,10 +135,10 @@ index e3da77bec..076bec303 100644
      bool result = false;
  
      if (sys_debuggable || atrace_is_debuggable) {
-diff --git a/libutils/Printer.cpp b/libutils/Printer.cpp
+diff --git a/src/system_core/libutils/Printer.cpp b/src/system_core/libutils/Printer.cpp
 index c9ae210ba..999c6f7b8 100644
---- a/libutils/Printer.cpp
-+++ b/libutils/Printer.cpp
+--- a/src/system_core/libutils/Printer.cpp
++++ b/src/system_core/libutils/Printer.cpp
 @@ -22,6 +22,7 @@
  #include <utils/Log.h>
  
@@ -157,10 +157,10 @@ index c9ae210ba..999c6f7b8 100644
  }
  
  
-diff --git a/libutils/Threads.cpp b/libutils/Threads.cpp
+diff --git a/src/system_core/libutils/Threads.cpp b/src/system_core/libutils/Threads.cpp
 index 31ca1383e..64bc4025d 100644
---- a/libutils/Threads.cpp
-+++ b/libutils/Threads.cpp
+--- a/src/system_core/libutils/Threads.cpp
++++ b/src/system_core/libutils/Threads.cpp
 @@ -36,7 +36,7 @@
  
  #include <utils/Log.h>
@@ -170,10 +170,10 @@ index 31ca1383e..64bc4025d 100644
  
  #if defined(__ANDROID__)
  # define __android_unused
-diff --git a/libutils/include/utils/ThreadDefs.h b/libutils/include/utils/ThreadDefs.h
+diff --git a/src/system_core/libutils/include/utils/ThreadDefs.h b/src/system_core/libutils/include/utils/ThreadDefs.h
 index 8eb3d1cbe..2ed1a6911 100644
---- a/libutils/include/utils/ThreadDefs.h
-+++ b/libutils/include/utils/ThreadDefs.h
+--- a/src/system_core/libutils/include/utils/ThreadDefs.h
++++ b/src/system_core/libutils/include/utils/ThreadDefs.h
 @@ -19,7 +19,6 @@
  
  #include <stdint.h>

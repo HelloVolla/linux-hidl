@@ -7,10 +7,10 @@ Subject: [PATCH] Fix bulding on gcc5
  Interface.cpp | 22 +++++++++++-----------
  1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/Interface.cpp b/Interface.cpp
+diff --git a/src/hidl/Interface.cpp b/src/hidl/Interface.cpp
 index b0ffa34d..1a9d4cec 100644
---- a/Interface.cpp
-+++ b/Interface.cpp
+--- a/src/hidl/Interface.cpp
++++ b/src/hidl/Interface.cpp
 @@ -265,7 +265,7 @@ bool Interface::fillDescriptorChainMethod(Method *method) const {
      method->fillImplementation(
          HIDL_DESCRIPTOR_CHAIN_TRANSACTION,

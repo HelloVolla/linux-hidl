@@ -15,10 +15,10 @@ Subject: [PATCH] Add building and generating for HIDL headers, src and
  transport/include/hidl/Static.h      | 1 +
  8 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/base/Status.cpp b/base/Status.cpp
+diff --git a/src/libhidl/base/Status.cpp b/src/libhidl/base/Status.cpp
 index 90474a01fb58dd0d0aad81275863f121750dac42..4bb2646659eb6394cd8ac0cce18532049db5327f 100644
---- a/base/Status.cpp
-+++ b/base/Status.cpp
+--- a/src/libhidl/base/Status.cpp
++++ b/src/libhidl/base/Status.cpp
 @@ -169,7 +169,7 @@ namespace details {
  
          if (gReturnRestriction == HidlReturnRestriction::ERROR_IF_UNCHECKED) {
@@ -28,10 +28,10 @@ index 90474a01fb58dd0d0aad81275863f121750dac42..4bb2646659eb6394cd8ac0cce1853204
          } else {
              LOG(FATAL) << "Failed to check status of HIDL Return.";
          }
-diff --git a/base/include/hidl/TaskRunner.h b/base/include/hidl/TaskRunner.h
+diff --git a/src/libhidl/base/include/hidl/TaskRunner.h b/src/libhidl/base/include/hidl/TaskRunner.h
 index 6a79ebf544f35d19f47e2d04e04277992bb3b733..f3ea92f7bbc9cdf233a3911cab70ce3230cc549f 100644
---- a/base/include/hidl/TaskRunner.h
-+++ b/base/include/hidl/TaskRunner.h
+--- a/src/libhidl/base/include/hidl/TaskRunner.h
++++ b/src/libhidl/base/include/hidl/TaskRunner.h
 @@ -16,6 +16,7 @@
  #ifndef ANDROID_HIDL_TASK_RUNNER_H
  #define ANDROID_HIDL_TASK_RUNNER_H
@@ -40,10 +40,10 @@ index 6a79ebf544f35d19f47e2d04e04277992bb3b733..f3ea92f7bbc9cdf233a3911cab70ce32
  #include <memory>
  #include <thread>
  
-diff --git a/transport/HidlBinderSupport.cpp b/transport/HidlBinderSupport.cpp
+diff --git a/src/libhidl/transport/HidlBinderSupport.cpp b/src/libhidl/transport/HidlBinderSupport.cpp
 index 352ed78ad8212d7a47d9f551861916b7ee43623b..76ff6958751d58f10ed9aa96e6bc522cb5021cd0 100644
---- a/transport/HidlBinderSupport.cpp
-+++ b/transport/HidlBinderSupport.cpp
+--- a/src/libhidl/transport/HidlBinderSupport.cpp
++++ b/src/libhidl/transport/HidlBinderSupport.cpp
 @@ -18,7 +18,7 @@
  
  #include <hidl/HidlBinderSupport.h>
@@ -53,10 +53,10 @@ index 352ed78ad8212d7a47d9f551861916b7ee43623b..76ff6958751d58f10ed9aa96e6bc522c
  #include <android/hidl/base/1.0/BpHwBase.h>
  #include <hwbinder/IPCThreadState.h>
  
-diff --git a/transport/HidlPassthroughSupport.cpp b/transport/HidlPassthroughSupport.cpp
+diff --git a/src/libhidl/transport/HidlPassthroughSupport.cpp b/src/libhidl/transport/HidlPassthroughSupport.cpp
 index bc6765622c04bdea1ddc64e6c3e5760e807af97e..6f30b7b0efb1db56d246a1c0c74a760b9bd9dcb1 100644
---- a/transport/HidlPassthroughSupport.cpp
-+++ b/transport/HidlPassthroughSupport.cpp
+--- a/src/libhidl/transport/HidlPassthroughSupport.cpp
++++ b/src/libhidl/transport/HidlPassthroughSupport.cpp
 @@ -16,7 +16,7 @@
  
  #include <hidl/HidlPassthroughSupport.h>
@@ -66,10 +66,10 @@ index bc6765622c04bdea1ddc64e6c3e5760e807af97e..6f30b7b0efb1db56d246a1c0c74a760b
  
  #include <hidl/HidlTransportUtils.h>
  #include <hidl/Static.h>
-diff --git a/transport/HidlTransportSupport.cpp b/transport/HidlTransportSupport.cpp
+diff --git a/src/libhidl/transport/HidlTransportSupport.cpp b/src/libhidl/transport/HidlTransportSupport.cpp
 index b433b70a6d81a4a4cd23ec7d2151147db9839f36..70c7a555417ad1bb5980b06fe02e3a1010de2cc5 100644
---- a/transport/HidlTransportSupport.cpp
-+++ b/transport/HidlTransportSupport.cpp
+--- a/src/libhidl/transport/HidlTransportSupport.cpp
++++ b/src/libhidl/transport/HidlTransportSupport.cpp
 @@ -20,6 +20,8 @@
  #include <android-base/logging.h>
  #include <android/hidl/manager/1.0/IServiceManager.h>
@@ -79,10 +79,10 @@ index b433b70a6d81a4a4cd23ec7d2151147db9839f36..70c7a555417ad1bb5980b06fe02e3a10
  namespace android {
  namespace hardware {
  
-diff --git a/transport/ServiceManagement.cpp b/transport/ServiceManagement.cpp
+diff --git a/src/libhidl/transport/ServiceManagement.cpp b/src/libhidl/transport/ServiceManagement.cpp
 index bbec17c1847f8c4aa75b395951326ef84c68e120..5415dbb1b8469e15c7c01109c7d3f10409e8e7d4 100644
---- a/transport/ServiceManagement.cpp
-+++ b/transport/ServiceManagement.cpp
+--- a/src/libhidl/transport/ServiceManagement.cpp
++++ b/src/libhidl/transport/ServiceManagement.cpp
 @@ -16,7 +16,7 @@
  
  #define LOG_TAG "ServiceManagement"
@@ -110,10 +110,10 @@ index bbec17c1847f8c4aa75b395951326ef84c68e120..5415dbb1b8469e15c7c01109c7d3f104
  #endif
                  }
  
-diff --git a/transport/Static.cpp b/transport/Static.cpp
+diff --git a/src/libhidl/transport/Static.cpp b/src/libhidl/transport/Static.cpp
 index af16e8f18ab913e63598a37cf16d5073d2f7d292..fd0f562121b1d0e943fe5b2af3b665c945c801d9 100644
---- a/transport/Static.cpp
-+++ b/transport/Static.cpp
+--- a/src/libhidl/transport/Static.cpp
++++ b/src/libhidl/transport/Static.cpp
 @@ -17,7 +17,7 @@
  // All static variables go here, to control initialization and
  // destruction order in the library.
@@ -123,10 +123,10 @@ index af16e8f18ab913e63598a37cf16d5073d2f7d292..fd0f562121b1d0e943fe5b2af3b665c9
  #include <hidl/Static.h>
  
  #include <android/hidl/manager/1.0/IServiceManager.h>
-diff --git a/transport/include/hidl/Static.h b/transport/include/hidl/Static.h
+diff --git a/src/libhidl/transport/include/hidl/Static.h b/src/libhidl/transport/include/hidl/Static.h
 index be74baefc1907f87398c3818dac156c86fb5d668..d833dcad9e4f788e306026903bdf97daec8069e2 100644
---- a/transport/include/hidl/Static.h
-+++ b/transport/include/hidl/Static.h
+--- a/src/libhidl/transport/include/hidl/Static.h
++++ b/src/libhidl/transport/include/hidl/Static.h
 @@ -27,6 +27,7 @@
  #include <hwbinder/IBinder.h>
  #include <hwbinder/IInterface.h>

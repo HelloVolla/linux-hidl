@@ -9,10 +9,10 @@ Subject: [PATCH] Fix bulding on gcc5
  ProcessState.cpp   |  5 ++---
  3 files changed, 17 insertions(+), 18 deletions(-)
 
-diff --git a/IPCThreadState.cpp b/IPCThreadState.cpp
+diff --git a/src/libhwbinder/IPCThreadState.cpp b/src/libhwbinder/IPCThreadState.cpp
 index 4c0ac6db8653c417461c21cc6aa163c239a26636..d36c32e1aa356a7c843c4524d9545193f70816d8 100644
---- a/IPCThreadState.cpp
-+++ b/IPCThreadState.cpp
+--- a/src/libhwbinder/IPCThreadState.cpp
++++ b/src/libhwbinder/IPCThreadState.cpp
 @@ -1190,7 +1190,7 @@ status_t IPCThreadState::executeCommand(int32_t cmd)
                  reply_sent = true;
                  if ((tr.flags & TF_ONE_WAY) == 0) {
@@ -22,10 +22,10 @@ index 4c0ac6db8653c417461c21cc6aa163c239a26636..d36c32e1aa356a7c843c4524d9545193
                  } else {
                      ALOGE("Not sending reply in one-way transaction");
                  }
-diff --git a/Parcel.cpp b/Parcel.cpp
+diff --git a/src/libhwbinder/Parcel.cpp b/src/libhwbinder/Parcel.cpp
 index 31e95b8dfbb544db59f61393ccec3fd5a9d18ff8..8dd5b36a9992b3070e9f5d6638b96a508403099c 100644
---- a/Parcel.cpp
-+++ b/Parcel.cpp
+--- a/src/libhwbinder/Parcel.cpp
++++ b/src/libhwbinder/Parcel.cpp
 @@ -845,9 +845,9 @@ status_t Parcel::writeEmbeddedBuffer(
          return BAD_VALUE;
      binder_buffer_object obj = {
@@ -86,10 +86,10 @@ index 31e95b8dfbb544db59f61393ccec3fd5a9d18ff8..8dd5b36a9992b3070e9f5d6638b96a50
  
      return writeObject(fd_array);
  }
-diff --git a/ProcessState.cpp b/ProcessState.cpp
+diff --git a/src/libhwbinder/ProcessState.cpp b/src/libhwbinder/ProcessState.cpp
 index 8a8b7ccc3460abdc8c5110c8f4577442766b471d..c7b4e00ea6b17d4b407aeaed6f365f4e1e4d67b8 100644
---- a/ProcessState.cpp
-+++ b/ProcessState.cpp
+--- a/src/libhwbinder/ProcessState.cpp
++++ b/src/libhwbinder/ProcessState.cpp
 @@ -167,9 +167,8 @@ bool ProcessState::becomeContextManager(context_check_func checkFunc, void* user
          mBinderContextCheckFunc = checkFunc;
          mBinderContextUserData = userData;

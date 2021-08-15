@@ -8,10 +8,10 @@ Subject: [PATCH] MakeParentHierarchy: avoid race-condition between stat and
  Coordinator.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Coordinator.cpp b/Coordinator.cpp
+diff --git a/src/hidl/Coordinator.cpp b/src/hidl/Coordinator.cpp
 index 799c1c30..ef4d2e11 100644
---- a/Coordinator.cpp
-+++ b/Coordinator.cpp
+--- a/src/hidl/Coordinator.cpp
++++ b/src/hidl/Coordinator.cpp
 @@ -931,7 +931,7 @@ bool Coordinator::MakeParentHierarchy(const std::string &path) {
              }
  

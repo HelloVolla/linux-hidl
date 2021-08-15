@@ -8,10 +8,10 @@ Subject: [PATCH] Add building and generating for HIDL headers, src and
  EventFlag.cpp | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/EventFlag.cpp b/EventFlag.cpp
+diff --git a/src/libfmq/EventFlag.cpp b/src/libfmq/EventFlag.cpp
 index cb101bd..5cf27e7 100644
---- a/EventFlag.cpp
-+++ b/EventFlag.cpp
+--- a/src/libfmq/EventFlag.cpp
++++ b/src/libfmq/EventFlag.cpp
 @@ -17,6 +17,7 @@
  #define LOG_TAG "FMQ_EventFlags"
  

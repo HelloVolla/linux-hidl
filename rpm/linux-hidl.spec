@@ -14,18 +14,18 @@ BuildRequires:  openssl-devel
 BuildRequires:  tinyxml2-devel
 BuildRequires:  libcap-devel
 Patch0:         0001-hidl-Add-building-and-generating-for-HIDL-headers-src-and.patch
-Patch1:         0001-libfmq-Add-building-and-generating-for-HIDL-headers-src-and.patch
-Patch2:         0001-libhidl-Add-building-and-generating-for-HIDL-headers-src-and.patch
-Patch3:         0001-libhwbinder-Add-building-and-generating-for-HIDL-headers-src-and.patch
-Patch4:         0001-systemcore-Add-building-and-generating-for-HIDL-headers-src-and.patch
-Patch5:         0002-hidl-Fix-bulding-on-gcc5.patch
-Patch6:         0002-libhidl-Fix-bulding-on-gcc5.patch
-Patch7:         0002-libhwbinder-Fix-bulding-on-gcc5.patch
-Patch8:         0002-systemcore-Fix-bulding-on-gcc5.patch
-Patch9:         0003-hidl-MakeParentHierarchy-avoid-race-condition-between-sta.patch
-Patch10:        0003-libhwbinder-Make-sure-we-define-__ANDROID__-in-hwbinder.patch
-Patch11:        0003-systemcore-base-define-__BIONIC__-for-properties-code.patch
-Patch12:        0004-systemcore-liblog-fix-compilation-with-GCC-5.patch
+Patch1:         0002-hidl-Fix-bulding-on-gcc5.patch
+Patch2:         0003-hidl-MakeParentHierarchy-avoid-race-condition-between-sta.patch
+Patch3:         0004-libhidl-Add-building-and-generating-for-HIDL-headers-src-and.patch
+Patch4:         0005-libhidl-Fix-bulding-on-gcc5.patch
+Patch5:         0006-libfmq-Add-building-and-generating-for-HIDL-headers-src-and.patch
+Patch6:         0007-libhwbinder-Add-building-and-generating-for-HIDL-headers-src-and.patch
+Patch7:         0008-libhwbinder-Fix-bulding-on-gcc5.patch
+Patch8:         0009-libhwbinder-Make-sure-we-define-__ANDROID__-in-hwbinder.patch
+Patch9:         0010-systemcore-Add-building-and-generating-for-HIDL-headers-src-and.patch
+Patch10:        0011-systemcore-base-define-__BIONIC__-for-properties-code.patch
+Patch11:        0012-systemcore-Fix-bulding-on-gcc5.patch
+Patch12:        0013-systemcore-liblog-fix-compilation-with-GCC-5.patch
 
 %description
 This builds and generates HIDL headers and binaries. This is work in progress, expect bugs and failures!
@@ -38,8 +38,8 @@ Requires:  linux-hidl = %{version}-%{release}
 %{summary}
 
 %prep
-%autosetup -n %{name}-%{version}/upstream
-patch0 -p1
+%autosetup -p1 -n %{name}-%{version}/upstream
+#patch0 -p1
 #patch1 -p1
 #patch2 -p1
 #patch3 -p1

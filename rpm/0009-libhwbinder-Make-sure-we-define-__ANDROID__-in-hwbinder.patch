@@ -7,10 +7,10 @@ Subject: [PATCH] Make sure we define __ANDROID__ in hwbinder
  IPCThreadState.cpp | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/IPCThreadState.cpp b/IPCThreadState.cpp
+diff --git a/src/libhwbinder/IPCThreadState.cpp b/src/libhwbinder/IPCThreadState.cpp
 index d36c32e1aa356a7c843c4524d9545193f70816d8..c74bec804715aee68a8b08877004a610ff7ca099 100644
---- a/IPCThreadState.cpp
-+++ b/IPCThreadState.cpp
+--- a/src/libhwbinder/IPCThreadState.cpp
++++ b/src/libhwbinder/IPCThreadState.cpp
 @@ -43,6 +43,8 @@
  #include <sys/resource.h>
  #include <unistd.h>

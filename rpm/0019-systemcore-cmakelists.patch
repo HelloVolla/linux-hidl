@@ -1,0 +1,163 @@
+diff --git a/src/system_core/CMakeLists.txt b/src/system_core/CMakeLists.txt
+new file mode 100644
+index 000000000..52d12fbc0
+--- /dev/null
++++ b/src/system_core/CMakeLists.txt
+@@ -0,0 +1,4 @@
++add_subdirectory(base)
++add_subdirectory(libcutils)
++add_subdirectory(liblog)
++add_subdirectory(libutils)
+diff --git a/src/system_core/base/CMakeLists.txt b/src/system_core/base/CMakeLists.txt
+new file mode 100644
+index 000000000..8fe8dca7a
+--- /dev/null
++++ b/src/system_core/base/CMakeLists.txt
+@@ -0,0 +1,23 @@
++add_library(libbase SHARED
++    chrono_utils.cpp
++    cmsg.cpp
++    file.cpp
++    logging.cpp
++    mapped_file.cpp
++    parsenetaddress.cpp
++    properties.cpp
++    quick_exit.cpp
++    stringprintf.cpp
++    strings.cpp
++    threads.cpp
++    test_utils.cpp
++)
++
++target_include_directories(libbase PUBLIC include)
++target_link_libraries(libbase liblog bionic_functions)
++
++install(TARGETS libbase
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        PUBLIC_HEADER)
++
++install(DIRECTORY include/android-base DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/linux-hidl)
+diff --git a/src/system_core/libcutils/CMakeLists.txt b/src/system_core/libcutils/CMakeLists.txt
+new file mode 100644
+index 000000000..beecf36c8
+--- /dev/null
++++ b/src/system_core/libcutils/CMakeLists.txt
+@@ -0,0 +1,47 @@
++add_library(libcutils SHARED
++    # libcutils_nonwindows_sources
++    fs.cpp
++    hashmap.cpp
++    multiuser.cpp
++    socket_inaddr_any_server_unix.cpp
++    socket_local_client_unix.cpp
++    socket_local_server_unix.cpp
++    socket_network_client_unix.cpp
++    sockets_unix.cpp
++    str_parms.cpp
++
++    # libcutils srcs
++    config_utils.cpp
++    canned_fs_config.cpp
++    iosched_policy.cpp
++    load_file.cpp
++    native_handle.cpp
++    record_stream.cpp
++    sockets.cpp
++    strdup16to8.cpp
++    strdup8to16.cpp
++    strlcpy.c
++    threads.cpp
++
++    # libcutils android srcs
++    android_get_control_file.cpp
++    android_reboot.cpp
++    ashmem-dev.cpp
++    fs_config.cpp
++    klog.cpp
++    partition_utils.cpp
++    properties.cpp
++    qtaguid.cpp
++    trace-dev.cpp
++    uevent.cpp
++)
++
++target_include_directories(libcutils PUBLIC include)
++target_include_directories(libcutils PRIVATE ../libutils/include)
++target_link_libraries(libcutils libbase liblog bionic_functions)
++
++install(TARGETS libcutils
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        PUBLIC_HEADER)
++
++install(DIRECTORY include/cutils DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/linux-hidl)
+diff --git a/src/system_core/liblog/CMakeLists.txt b/src/system_core/liblog/CMakeLists.txt
+new file mode 100644
+index 000000000..09b46f202
+--- /dev/null
++++ b/src/system_core/liblog/CMakeLists.txt
+@@ -0,0 +1,26 @@
++add_library(liblog SHARED
++    config_read.cpp
++    config_write.cpp
++    log_event_list.cpp
++    log_event_write.cpp
++    logger_lock.cpp
++    logger_name.cpp
++    logger_read.cpp
++    logger_write.cpp
++    logprint.cpp
++    stderr_write.cpp
++
++    # liblog_host_sources
++    fake_log_device.cpp
++    fake_writer.cpp
++)
++
++target_include_directories(liblog PUBLIC include)
++target_include_directories(liblog PRIVATE ../libcutils/include)
++target_compile_options(liblog PRIVATE -DFAKE_LOG_DEVICE=1)
++
++install(TARGETS liblog
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        PUBLIC_HEADER)
++
++install(DIRECTORY include/android include/log DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/linux-hidl)
+diff --git a/src/system_core/libutils/CMakeLists.txt b/src/system_core/libutils/CMakeLists.txt
+new file mode 100644
+index 000000000..769aa0237
+--- /dev/null
++++ b/src/system_core/libutils/CMakeLists.txt
+@@ -0,0 +1,33 @@
++add_library(libutils SHARED
++        FileMap.cpp
++        JenkinsHash.cpp
++        NativeHandle.cpp
++        Printer.cpp
++        PropertyMap.cpp
++        RefBase.cpp
++        SharedBuffer.cpp
++        StopWatch.cpp
++        String8.cpp
++        String16.cpp
++        StrongPointer.cpp
++        SystemClock.cpp
++        Threads.cpp
++        Timers.cpp
++        Tokenizer.cpp
++        Unicode.cpp
++        VectorImpl.cpp
++        misc.cpp
++)
++
++target_include_directories(libutils PUBLIC include)
++target_include_directories(libutils PRIVATE ../base/include)
++target_include_directories(libutils PRIVATE ../libprocessgroup/include)
++
++# HACK! This package does not have pkg-config!
++target_link_libraries(libutils /usr/lib/src/system_core/libsafe_iop.so libcutils liblog)
++
++install(TARGETS libutils
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        PUBLIC_HEADER)
++
++install(DIRECTORY include/utils DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/linux-hidl)

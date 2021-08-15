@@ -8,10 +8,10 @@ Subject: [PATCH] base: define __BIONIC__ for properties code
  base/properties.cpp                    | 2 ++
  2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/base/include/android-base/properties.h b/base/include/android-base/properties.h
+diff --git a/src/system_core/base/include/android-base/properties.h b/src/system_core/base/include/android-base/properties.h
 index 31e52731d..6134f7647 100644
---- a/base/include/android-base/properties.h
-+++ b/base/include/android-base/properties.h
+--- a/src/system_core/base/include/android-base/properties.h
++++ b/src/system_core/base/include/android-base/properties.h
 @@ -57,18 +57,18 @@ bool SetProperty(const std::string& key, const std::string& value);
  // Waits for the system property `key` to have the value `expected_value`.
  // Times out after `relative_timeout`.
@@ -35,10 +35,10 @@ index 31e52731d..6134f7647 100644
  
  } // namespace base
  } // namespace android
-diff --git a/base/properties.cpp b/base/properties.cpp
+diff --git a/src/system_core/base/properties.cpp b/src/system_core/base/properties.cpp
 index d5a5918ce..c7ca1f0e3 100644
---- a/base/properties.cpp
-+++ b/base/properties.cpp
+--- a/src/system_core/base/properties.cpp
++++ b/src/system_core/base/properties.cpp
 @@ -16,6 +16,8 @@
  
  #include "android-base/properties.h"

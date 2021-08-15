@@ -10,10 +10,10 @@ Subject: [PATCH] liblog: fix compilation with GCC 5
  liblog/stderr_write.cpp | 15 ++++++++-------
  4 files changed, 26 insertions(+), 14 deletions(-)
 
-diff --git a/liblog/fake_writer.cpp b/liblog/fake_writer.cpp
+diff --git a/src/system_core/liblog/fake_writer.cpp b/src/system_core/liblog/fake_writer.cpp
 index c0b0e69a5..baf9fb7b9 100644
---- a/liblog/fake_writer.cpp
-+++ b/liblog/fake_writer.cpp
+--- a/src/system_core/liblog/fake_writer.cpp
++++ b/src/system_core/liblog/fake_writer.cpp
 @@ -32,13 +32,14 @@ static int fakeWrite(log_id_t log_id, struct timespec* ts, struct iovec* vec, si
  static int logFds[(int)LOG_ID_MAX] = {-1, -1, -1, -1, -1, -1};
  
@@ -36,10 +36,10 @@ index c0b0e69a5..baf9fb7b9 100644
  };
  
  static int fakeOpen() {
-diff --git a/liblog/logger.h b/liblog/logger.h
+diff --git a/src/system_core/liblog/logger.h b/src/system_core/liblog/logger.h
 index 1f632c037..294545718 100644
---- a/liblog/logger.h
-+++ b/liblog/logger.h
+--- a/src/system_core/liblog/logger.h
++++ b/src/system_core/liblog/logger.h
 @@ -16,7 +16,12 @@
  
  #pragma once
@@ -53,10 +53,10 @@ index 1f632c037..294545718 100644
  #include <stdbool.h>
  
  #include <cutils/list.h>
-diff --git a/liblog/logger_write.cpp b/liblog/logger_write.cpp
+diff --git a/src/system_core/liblog/logger_write.cpp b/src/system_core/liblog/logger_write.cpp
 index 7fa3f436b..76e63b3da 100644
---- a/liblog/logger_write.cpp
-+++ b/liblog/logger_write.cpp
+--- a/src/system_core/liblog/logger_write.cpp
++++ b/src/system_core/liblog/logger_write.cpp
 @@ -15,7 +15,12 @@
   */
  
@@ -70,10 +70,10 @@ index 7fa3f436b..76e63b3da 100644
  #include <stdlib.h>
  #include <string.h>
  #include <sys/time.h>
-diff --git a/liblog/stderr_write.cpp b/liblog/stderr_write.cpp
+diff --git a/src/system_core/liblog/stderr_write.cpp b/src/system_core/liblog/stderr_write.cpp
 index e324a7c65..0ba152a62 100644
---- a/liblog/stderr_write.cpp
-+++ b/liblog/stderr_write.cpp
+--- a/src/system_core/liblog/stderr_write.cpp
++++ b/src/system_core/liblog/stderr_write.cpp
 @@ -55,13 +55,14 @@ struct stderrContext {
  };
  
