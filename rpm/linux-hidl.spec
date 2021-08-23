@@ -32,6 +32,9 @@ Patch15:        0016-libfmq-cmakelist.patch
 Patch16:        0017-libhidl-cmakelist.patch
 Patch17:        0018-libhwbinder-cmakelist.patch
 Patch18:        0019-systemcore-cmakelist.patch
+Patch19:        0020-add-android-headers.patch
+Patch20:        0021-system_core-libutils-remove-vector-const.patch
+Patch21:        0022-system_core-libcutils-add-throw.patch
 
 %description
 This builds and generates HIDL headers and binaries. This is work in progress, expect bugs and failures!
