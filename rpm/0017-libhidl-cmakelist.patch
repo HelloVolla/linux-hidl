@@ -1,17 +1,17 @@
-diff --git a/src/libhidl/CMakeLists.txt b/src/libhidl/CMakeLists.txt
+diff --git a/CMakeLists.txt b/CMakeLists.txt
 new file mode 100644
 index 0000000..11de572
 --- /dev/null
-+++ b/src/libhidl/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -0,0 +1,2 @@
 +add_subdirectory(base)
 +add_subdirectory(transport)
-diff --git a/src/libhidl/base/CMakeLists.txt b/src/libhidl/base/CMakeLists.txt
+diff --git a/base/CMakeLists.txt b/base/CMakeLists.txt
 new file mode 100644
-index 0000000..84c01af
+index 0000000..197c270
 --- /dev/null
-+++ b/src/libhidl/base/CMakeLists.txt
-@@ -0,0 +1,15 @@
++++ b/base/CMakeLists.txt
+@@ -0,0 +1,19 @@
 +add_library(libhidlbase SHARED
 +        HidlInternal.cpp
 +        HidlSupport.cpp
@@ -22,16 +22,20 @@ index 0000000..84c01af
 +target_include_directories(libhidlbase PUBLIC include)
 +target_link_libraries(libhidlbase libutils libcutils libbase)
 +
++set_target_properties(libhidlbase PROPERTIES
++    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
++)
++
 +install(TARGETS libhidlbase
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +        PUBLIC_HEADER)
 +
 +install(DIRECTORY include/hidl DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/linux-hidl)
-diff --git a/src/libhidl/minijail/CMakeLists.txt b/src/libhidl/minijail/CMakeLists.txt
+diff --git a/minijail/CMakeLists.txt b/minijail/CMakeLists.txt
 new file mode 100644
 index 0000000..16f2e1d
 --- /dev/null
-+++ b/src/libhidl/minijail/CMakeLists.txt
++++ b/minijail/CMakeLists.txt
 @@ -0,0 +1,9 @@
 +add_library(libhidlbase SHARED
 +        HidlInternal.cpp
@@ -42,12 +46,12 @@ index 0000000..16f2e1d
 +
 +target_include_directories(libhidlbase PUBLIC include)
 +target_link_libraries(libhidlbase libutils libcutils base)
-diff --git a/src/libhidl/transport/CMakeLists.txt b/src/libhidl/transport/CMakeLists.txt
+diff --git a/transport/CMakeLists.txt b/transport/CMakeLists.txt
 new file mode 100644
-index 0000000..29f520d
+index 0000000..c7b33ee
 --- /dev/null
-+++ b/src/libhidl/transport/CMakeLists.txt
-@@ -0,0 +1,40 @@
++++ b/transport/CMakeLists.txt
+@@ -0,0 +1,44 @@
 +add_hidl(NAME android.hidl.base@1.0 ROOT android.hidl HEADERS android.hidl.manager_1.0
 +	 SRCS IBase.hal types.hal)
 +add_hidl(NAME android.hidl.manager@1.0 ROOT android.hidl LINK android.hidl.base_1.0
@@ -82,6 +86,10 @@ index 0000000..29f520d
 +
 +add_dependencies(libhidltransport android.hidl.base_1.0_target android.hidl.manager_1.0_target android.hidl.manager_1.1_target android.hidl.manager_1.2_target)
 +target_include_directories(libhidltransport PRIVATE ${android.hidl.base_1.0_outdir} ${android.hidl.manager_1.0_outdir} ${android.hidl.manager_1.1_outdir} ${android.hidl.manager_1.2_outdir} )
++
++set_target_properties(libhidltransport PROPERTIES
++    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
++)
 +
 +install(TARGETS libhidltransport
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

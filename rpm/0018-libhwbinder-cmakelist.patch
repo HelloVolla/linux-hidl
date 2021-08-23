@@ -1,9 +1,9 @@
-diff --git a/src/libhwbinder/CMakeLists.txt b/src/libhwbinder/CMakeLists.txt
+diff --git a/CMakeLists.txt b/CMakeLists.txt
 new file mode 100644
-index 0000000..d40e610
+index 0000000..96e60af
 --- /dev/null
-+++ b/src/libhwbinder/CMakeLists.txt
-@@ -0,0 +1,21 @@
++++ b/CMakeLists.txt
+@@ -0,0 +1,25 @@
 +add_library(libhwbinder SHARED
 +	Binder.cpp
 +	BpHwBinder.cpp
@@ -17,8 +17,12 @@ index 0000000..d40e610
 +	TextOutput.cpp
 +)
 +
-+target_include_directories(libhwbinder PUBLIC include)
++target_include_directories(libhwbinder PUBLIC include ../system_core/include/ ${ANDROID_HEADERS_INCLUDE_DIRS})
 +target_link_libraries(libhwbinder libutils libcutils libbinderthreadstate pthread)
++
++set_target_properties(libhwbinder PROPERTIES
++    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
++)
 +
 +install(TARGETS libhwbinder
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

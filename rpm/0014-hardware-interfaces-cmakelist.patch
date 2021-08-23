@@ -1,8 +1,8 @@
-diff --git a/src/hardware/interface/CMakeLists.txt b/src/hardware/interface/CMakeLists.txt
+diff --git a/CMakeLists.txt b/CMakeLists.txt
 new file mode 100644
 index 000000000..1f5083951
 --- /dev/null
-+++ b/src/hardware/interface/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -0,0 +1,8 @@
 +add_hidl(NAME android.hardware.sensors@1.0 ROOT android.hardware LINK android.hidl.base_1.0 android.hidl.manager_1.0
 +         SRCS types.hal ISensors.hal)

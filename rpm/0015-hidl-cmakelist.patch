@@ -1,9 +1,9 @@
-diff --git a/CMakeLists.txt b/src/hidl/CMakeLists.txt
+diff --git a/CMakeLists.txt b/CMakeLists.txt
 new file mode 100644
-index 00000000..c87d06c3
+index 00000000..73d7f341
 --- /dev/null
-+++ b/src/hidl/CMakeLists.txt
-@@ -0,0 +1,159 @@
++++ b/CMakeLists.txt
+@@ -0,0 +1,172 @@
 +add_subdirectory(hashing)
 +add_subdirectory(host_utils)
 +add_subdirectory(utils)
@@ -35,6 +35,10 @@ index 00000000..c87d06c3
 +)
 +target_link_libraries(libhidl-gen libbase libhidl-gen-hash libhidl-gen-utils libhidl-gen-host-utils)
 +
++set_target_properties(libhidl-gen PROPERTIES
++    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
++)
++
 +install(TARGETS libhidl-gen
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +        PUBLIC_HEADER)
@@ -59,6 +63,10 @@ index 00000000..c87d06c3
 +)
 +target_link_libraries(libhidl-gen-ast libbase libhidl-gen libhidl-gen-hash libhidl-gen-utils libhidl-gen-host-utils)
 +target_include_directories(libhidl-gen-ast PRIVATE .)
++
++set_target_properties(libhidl-gen-ast PROPERTIES
++    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
++)
 +
 +install(TARGETS libhidl-gen-ast
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -130,7 +138,7 @@ index 00000000..c87d06c3
 +
 +  add_custom_command(
 +    OUTPUT ${_SRCS}
-+    COMMAND $<TARGET_FILE:hidl-gen>
++    COMMAND LD_LIBRARY_PATH=${CMAKE_SOURCE_DIR}/src/hidl:${CMAKE_SOURCE_DIR}/src/hidl/hashing/:${CMAKE_SOURCE_DIR}/src/hidl/utils/:${CMAKE_SOURCE_DIR}/src/hidl/host_utils/:${CMAKE_SOURCE_DIR}/src/system_core/base/ $<TARGET_FILE:hidl-gen>
 +    -L c++
 +    ${_ROOTS}
 +    -o ${_OUTDIR}
@@ -157,18 +165,23 @@ index 00000000..c87d06c3
 +
 +  target_link_libraries(${_name} libutils libcutils libbase libhidltransport ${arg_LINK} ${${_name}_link})
 +
++  set_target_properties(${_name} PROPERTIES
++    PREFIX lib
++    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
++  )
++
 +  install(TARGETS ${_name}
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +        PUBLIC_HEADER)
 +
 +  install(DIRECTORY ${_OUTDIR_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/linux-hidl/${_SRC_PATH})
 +endfunction(add_hidl)
-diff --git a/hashing/CMakeLists.txt b/src/hidl/hashing/CMakeLists.txt
+diff --git a/hashing/CMakeLists.txt b/hashing/CMakeLists.txt
 new file mode 100644
-index 00000000..e1d655a5
+index 00000000..ad2e6f2c
 --- /dev/null
-+++ b/src/hidl/hashing/CMakeLists.txt
-@@ -0,0 +1,10 @@
++++ b/hashing/CMakeLists.txt
+@@ -0,0 +1,14 @@
 +add_library(libhidl-gen-hash SHARED
 +    Hash.cpp
 +)
@@ -176,15 +189,19 @@ index 00000000..e1d655a5
 +target_include_directories(libhidl-gen-hash PRIVATE include/hidl-hash)
 +target_link_libraries(libhidl-gen-hash libutils libcutils libbase ${CRYPTO_LIBRARIES})
 +
++set_target_properties(libhidl-gen-hash PROPERTIES
++    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
++)
++
 +install(TARGETS libhidl-gen-hash
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +        PUBLIC_HEADER)
-diff --git a/src/hidl/host_utils/CMakeLists.txt b/src/hidl/host_utils/CMakeLists.txt
+diff --git a/host_utils/CMakeLists.txt b/host_utils/CMakeLists.txt
 new file mode 100644
-index 00000000..21ec86a7
+index 00000000..f056eabb
 --- /dev/null
-+++ b/src/hidl/host_utils/CMakeLists.txt
-@@ -0,0 +1,12 @@
++++ b/host_utils/CMakeLists.txt
+@@ -0,0 +1,16 @@
 +add_library(libhidl-gen-host-utils SHARED
 +    Formatter.cpp
 +    StringHelper.cpp
@@ -194,15 +211,19 @@ index 00000000..21ec86a7
 +target_include_directories(libhidl-gen-host-utils PRIVATE include/hidl-util)
 +target_link_libraries(libhidl-gen-host-utils libbase)
 +
++set_target_properties(libhidl-gen-host-utils PROPERTIES
++    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
++)
++
 +install(TARGETS libhidl-gen-host-utils
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +        PUBLIC_HEADER)
-diff --git a/utils/CMakeLists.txt b/src/hidl/utils/CMakeLists.txt
+diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
 new file mode 100644
-index 00000000..7becb3cf
+index 00000000..0c495ffa
 --- /dev/null
-+++ b/src/hidl/utils/CMakeLists.txt
-@@ -0,0 +1,12 @@
++++ b/utils/CMakeLists.txt
+@@ -0,0 +1,16 @@
 +add_library(libhidl-gen-utils SHARED
 +    FQName.cpp
 +    FqInstance.cpp
@@ -211,6 +232,10 @@ index 00000000..7becb3cf
 +target_include_directories(libhidl-gen-utils PUBLIC include)
 +target_include_directories(libhidl-gen-utils PRIVATE include/hidl-util)
 +target_link_libraries(libhidl-gen-utils libbase)
++
++set_target_properties(libhidl-gen-utils PROPERTIES
++    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
++)
 +
 +install(TARGETS libhidl-gen-utils
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

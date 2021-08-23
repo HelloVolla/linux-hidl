@@ -1,19 +1,19 @@
-diff --git a/src/system_core/CMakeLists.txt b/src/system_core/CMakeLists.txt
+diff --git a/CMakeLists.txt b/CMakeLists.txt
 new file mode 100644
 index 000000000..52d12fbc0
 --- /dev/null
-+++ b/src/system_core/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -0,0 +1,4 @@
 +add_subdirectory(base)
 +add_subdirectory(libcutils)
 +add_subdirectory(liblog)
 +add_subdirectory(libutils)
-diff --git a/src/system_core/base/CMakeLists.txt b/src/system_core/base/CMakeLists.txt
+diff --git a/base/CMakeLists.txt b/base/CMakeLists.txt
 new file mode 100644
-index 000000000..8fe8dca7a
+index 000000000..bde245808
 --- /dev/null
-+++ b/src/system_core/base/CMakeLists.txt
-@@ -0,0 +1,23 @@
++++ b/base/CMakeLists.txt
+@@ -0,0 +1,27 @@
 +add_library(libbase SHARED
 +    chrono_utils.cpp
 +    cmsg.cpp
@@ -32,17 +32,21 @@ index 000000000..8fe8dca7a
 +target_include_directories(libbase PUBLIC include)
 +target_link_libraries(libbase liblog bionic_functions)
 +
++set_target_properties(libbase PROPERTIES
++    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
++)
++
 +install(TARGETS libbase
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +        PUBLIC_HEADER)
 +
 +install(DIRECTORY include/android-base DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/linux-hidl)
-diff --git a/src/system_core/libcutils/CMakeLists.txt b/src/system_core/libcutils/CMakeLists.txt
+diff --git a/libcutils/CMakeLists.txt b/libcutils/CMakeLists.txt
 new file mode 100644
-index 000000000..beecf36c8
+index 000000000..61e70bac2
 --- /dev/null
-+++ b/src/system_core/libcutils/CMakeLists.txt
-@@ -0,0 +1,47 @@
++++ b/libcutils/CMakeLists.txt
+@@ -0,0 +1,52 @@
 +add_library(libcutils SHARED
 +    # libcutils_nonwindows_sources
 +    fs.cpp
@@ -81,21 +85,26 @@ index 000000000..beecf36c8
 +    uevent.cpp
 +)
 +
-+target_include_directories(libcutils PUBLIC include)
-+target_include_directories(libcutils PRIVATE ../libutils/include)
++#target_include_directories(libcutils PRIVATE include)
++target_include_directories(libcutils BEFORE PUBLIC include ${CMAKE_CURRENT_SOURCE_DIR_DIR}../libutils/include ${ANDROID_HEADERS_INCLUDE_DIRS})
++
 +target_link_libraries(libcutils libbase liblog bionic_functions)
++
++set_target_properties(libcutils PROPERTIES
++    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
++)
 +
 +install(TARGETS libcutils
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +        PUBLIC_HEADER)
 +
 +install(DIRECTORY include/cutils DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/linux-hidl)
-diff --git a/src/system_core/liblog/CMakeLists.txt b/src/system_core/liblog/CMakeLists.txt
+diff --git a/liblog/CMakeLists.txt b/liblog/CMakeLists.txt
 new file mode 100644
-index 000000000..09b46f202
+index 000000000..27c8e6c0f
 --- /dev/null
-+++ b/src/system_core/liblog/CMakeLists.txt
-@@ -0,0 +1,26 @@
++++ b/liblog/CMakeLists.txt
+@@ -0,0 +1,30 @@
 +add_library(liblog SHARED
 +    config_read.cpp
 +    config_write.cpp
@@ -117,17 +126,21 @@ index 000000000..09b46f202
 +target_include_directories(liblog PRIVATE ../libcutils/include)
 +target_compile_options(liblog PRIVATE -DFAKE_LOG_DEVICE=1)
 +
++set_target_properties(liblog PROPERTIES
++    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
++)
++
 +install(TARGETS liblog
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +        PUBLIC_HEADER)
 +
 +install(DIRECTORY include/android include/log DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/linux-hidl)
-diff --git a/src/system_core/libutils/CMakeLists.txt b/src/system_core/libutils/CMakeLists.txt
+diff --git a/libutils/CMakeLists.txt b/libutils/CMakeLists.txt
 new file mode 100644
-index 000000000..769aa0237
+index 000000000..e78a0f2b4
 --- /dev/null
-+++ b/src/system_core/libutils/CMakeLists.txt
-@@ -0,0 +1,33 @@
++++ b/libutils/CMakeLists.txt
+@@ -0,0 +1,37 @@
 +add_library(libutils SHARED
 +        FileMap.cpp
 +        JenkinsHash.cpp
@@ -154,7 +167,11 @@ index 000000000..769aa0237
 +target_include_directories(libutils PRIVATE ../libprocessgroup/include)
 +
 +# HACK! This package does not have pkg-config!
-+target_link_libraries(libutils /usr/lib/src/system_core/libsafe_iop.so libcutils liblog)
++target_link_libraries(libutils /usr/lib64/libsafe_iop.so.0.3 libcutils liblog)
++
++set_target_properties(libutils PROPERTIES
++    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
++)
 +
 +install(TARGETS libutils
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

@@ -26,6 +26,12 @@ Patch9:         0010-systemcore-Add-building-and-generating-for-HIDL-headers-src
 Patch10:        0011-systemcore-base-define-__BIONIC__-for-properties-code.patch
 Patch11:        0012-systemcore-Fix-bulding-on-gcc5.patch
 Patch12:        0013-systemcore-liblog-fix-compilation-with-GCC-5.patch
+Patch13:        0014-hardware-interfaces-cmakelist.patch
+Patch14:        0015-hidl-cmakelist.patch
+Patch15:        0016-libfmq-cmakelist.patch
+Patch16:        0017-libhidl-cmakelist.patch
+Patch17:        0018-libhwbinder-cmakelist.patch
+Patch18:        0019-systemcore-cmakelist.patch
 
 %description
 This builds and generates HIDL headers and binaries. This is work in progress, expect bugs and failures!
@@ -39,26 +45,13 @@ Requires:  linux-hidl = %{version}-%{release}
 
 %prep
 %autosetup -p1 -n %{name}-%{version}/upstream
-#patch0 -p1
-#patch1 -p1
-#patch2 -p1
-#patch3 -p1
-#patch4 -p1
-#patch5 -p1
-#patch6 -p1
-#patch7 -p1
-#patch8 -p1
-#patch9 -p1
-#patch10 -p1
-#patch11 -p1
-#patch12 -p1
 
 %build
 %cmake
 %make_build
 
 %install
-%make install
+%make_install
 
 %post -p /sbin/ldconfig
 
@@ -66,11 +59,9 @@ Requires:  linux-hidl = %{version}-%{release}
 
 %files
 %defattr(-,root,root,-)
-%{_libdir}/gstreamer-%{majorminor}/*.so
-%{_libdir}/*.so.*
+%{_bindir}/*
+%{_libdir}/*.so*
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/gstreamer-%{majorminor}/gst/
-%{_libdir}/*.so
-%{_libdir}/pkgconfig/gstreamer-droid-1.0.pc
+%{_includedir}/*
