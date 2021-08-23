@@ -1,16 +1,16 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
+diff --git a/src/libhidl/CMakeLists.txt b/src/libhidl/CMakeLists.txt
 new file mode 100644
 index 0000000..11de572
 --- /dev/null
-+++ b/CMakeLists.txt
++++ b/src/libhidl/CMakeLists.txt
 @@ -0,0 +1,2 @@
 +add_subdirectory(base)
 +add_subdirectory(transport)
-diff --git a/base/CMakeLists.txt b/base/CMakeLists.txt
+diff --git a/src/libhidl/base/CMakeLists.txt b/src/libhidl/base/CMakeLists.txt
 new file mode 100644
 index 0000000..197c270
 --- /dev/null
-+++ b/base/CMakeLists.txt
++++ b/src/libhidl/base/CMakeLists.txt
 @@ -0,0 +1,19 @@
 +add_library(libhidlbase SHARED
 +        HidlInternal.cpp
@@ -31,11 +31,11 @@ index 0000000..197c270
 +        PUBLIC_HEADER)
 +
 +install(DIRECTORY include/hidl DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/linux-hidl)
-diff --git a/minijail/CMakeLists.txt b/minijail/CMakeLists.txt
+diff --git a/src/libhidl/minijail/CMakeLists.txt b/src/libhidl/minijail/CMakeLists.txt
 new file mode 100644
 index 0000000..16f2e1d
 --- /dev/null
-+++ b/minijail/CMakeLists.txt
++++ b/src/libhidl/minijail/CMakeLists.txt
 @@ -0,0 +1,9 @@
 +add_library(libhidlbase SHARED
 +        HidlInternal.cpp
@@ -46,11 +46,11 @@ index 0000000..16f2e1d
 +
 +target_include_directories(libhidlbase PUBLIC include)
 +target_link_libraries(libhidlbase libutils libcutils base)
-diff --git a/transport/CMakeLists.txt b/transport/CMakeLists.txt
+diff --git a/src/libhidl/transport/CMakeLists.txt b/src/libhidl/transport/CMakeLists.txt
 new file mode 100644
 index 0000000..c7b33ee
 --- /dev/null
-+++ b/transport/CMakeLists.txt
++++ b/src/libhidl/transport/CMakeLists.txt
 @@ -0,0 +1,44 @@
 +add_hidl(NAME android.hidl.base@1.0 ROOT android.hidl HEADERS android.hidl.manager_1.0
 +	 SRCS IBase.hal types.hal)

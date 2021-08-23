@@ -1,8 +1,8 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
+diff --git a/src/hidl/CMakeLists.txt b/src/hidl/CMakeLists.txt
 new file mode 100644
 index 00000000..73d7f341
 --- /dev/null
-+++ b/CMakeLists.txt
++++ b/src/hidl/CMakeLists.txt
 @@ -0,0 +1,172 @@
 +add_subdirectory(hashing)
 +add_subdirectory(host_utils)
@@ -176,11 +176,11 @@ index 00000000..73d7f341
 +
 +  install(DIRECTORY ${_OUTDIR_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/linux-hidl/${_SRC_PATH})
 +endfunction(add_hidl)
-diff --git a/hashing/CMakeLists.txt b/hashing/CMakeLists.txt
+diff --git a/src/hidl/hashing/CMakeLists.txt b/src/hidl/hashing/CMakeLists.txt
 new file mode 100644
 index 00000000..ad2e6f2c
 --- /dev/null
-+++ b/hashing/CMakeLists.txt
++++ b/src/hidl/hashing/CMakeLists.txt
 @@ -0,0 +1,14 @@
 +add_library(libhidl-gen-hash SHARED
 +    Hash.cpp
@@ -196,11 +196,11 @@ index 00000000..ad2e6f2c
 +install(TARGETS libhidl-gen-hash
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +        PUBLIC_HEADER)
-diff --git a/host_utils/CMakeLists.txt b/host_utils/CMakeLists.txt
+diff --git a/src/hidl/host_utils/CMakeLists.txt b/src/hidl/host_utils/CMakeLists.txt
 new file mode 100644
 index 00000000..f056eabb
 --- /dev/null
-+++ b/host_utils/CMakeLists.txt
++++ b/src/hidl/host_utils/CMakeLists.txt
 @@ -0,0 +1,16 @@
 +add_library(libhidl-gen-host-utils SHARED
 +    Formatter.cpp
@@ -218,11 +218,11 @@ index 00000000..f056eabb
 +install(TARGETS libhidl-gen-host-utils
 +        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +        PUBLIC_HEADER)
-diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
+diff --git a/src/hidl/utils/CMakeLists.txt b/src/hidl/utils/CMakeLists.txt
 new file mode 100644
 index 00000000..0c495ffa
 --- /dev/null
-+++ b/utils/CMakeLists.txt
++++ b/src/hidl/utils/CMakeLists.txt
 @@ -0,0 +1,16 @@
 +add_library(libhidl-gen-utils SHARED
 +    FQName.cpp

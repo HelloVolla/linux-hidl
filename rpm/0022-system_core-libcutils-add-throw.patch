@@ -1,0 +1,13 @@
+diff --git a/src/system_core/libcutils/include/cutils/threads.h b/src/system_core/libcutils/include/cutils/threads.h
+index ba4846e33..f84733586 100644
+--- a/src/system_core/libcutils/include/cutils/threads.h
++++ b/src/system_core/libcutils/include/cutils/threads.h
+@@ -33,7 +33,7 @@ extern "C" {
+ // Deprecated: use android::base::GetThreadId instead, which doesn't truncate on Mac/Windows.
+ //
+ 
+-extern pid_t gettid();
++extern pid_t gettid()  __THROW;
+ 
+ //
+ // Deprecated: use `_Thread_local` in C or `thread_local` in C++.

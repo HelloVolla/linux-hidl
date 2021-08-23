@@ -1,18 +1,18 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
+diff --git a/src/system_core/CMakeLists.txt b/src/system_core/CMakeLists.txt
 new file mode 100644
 index 000000000..52d12fbc0
 --- /dev/null
-+++ b/CMakeLists.txt
++++ b/src/system_core/CMakeLists.txt
 @@ -0,0 +1,4 @@
 +add_subdirectory(base)
 +add_subdirectory(libcutils)
 +add_subdirectory(liblog)
 +add_subdirectory(libutils)
-diff --git a/base/CMakeLists.txt b/base/CMakeLists.txt
+diff --git a/src/system_core/base/CMakeLists.txt b/src/system_core/base/CMakeLists.txt
 new file mode 100644
 index 000000000..bde245808
 --- /dev/null
-+++ b/base/CMakeLists.txt
++++ b/src/system_core/base/CMakeLists.txt
 @@ -0,0 +1,27 @@
 +add_library(libbase SHARED
 +    chrono_utils.cpp
@@ -41,11 +41,11 @@ index 000000000..bde245808
 +        PUBLIC_HEADER)
 +
 +install(DIRECTORY include/android-base DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/linux-hidl)
-diff --git a/libcutils/CMakeLists.txt b/libcutils/CMakeLists.txt
+diff --git a/src/system_core/libcutils/CMakeLists.txt b/src/system_core/libcutils/CMakeLists.txt
 new file mode 100644
 index 000000000..61e70bac2
 --- /dev/null
-+++ b/libcutils/CMakeLists.txt
++++ b/src/system_core/libcutils/CMakeLists.txt
 @@ -0,0 +1,52 @@
 +add_library(libcutils SHARED
 +    # libcutils_nonwindows_sources
@@ -99,11 +99,11 @@ index 000000000..61e70bac2
 +        PUBLIC_HEADER)
 +
 +install(DIRECTORY include/cutils DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/linux-hidl)
-diff --git a/liblog/CMakeLists.txt b/liblog/CMakeLists.txt
+diff --git a/src/system_core/liblog/CMakeLists.txt b/src/system_core/liblog/CMakeLists.txt
 new file mode 100644
 index 000000000..27c8e6c0f
 --- /dev/null
-+++ b/liblog/CMakeLists.txt
++++ b/src/system_core/liblog/CMakeLists.txt
 @@ -0,0 +1,30 @@
 +add_library(liblog SHARED
 +    config_read.cpp
@@ -135,11 +135,11 @@ index 000000000..27c8e6c0f
 +        PUBLIC_HEADER)
 +
 +install(DIRECTORY include/android include/log DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/linux-hidl)
-diff --git a/libutils/CMakeLists.txt b/libutils/CMakeLists.txt
+diff --git a/src/system_core/libutils/CMakeLists.txt b/src/system_core/libutils/CMakeLists.txt
 new file mode 100644
 index 000000000..e78a0f2b4
 --- /dev/null
-+++ b/libutils/CMakeLists.txt
++++ b/src/system_core/libutils/CMakeLists.txt
 @@ -0,0 +1,37 @@
 +add_library(libutils SHARED
 +        FileMap.cpp

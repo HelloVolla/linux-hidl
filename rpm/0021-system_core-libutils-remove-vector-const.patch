@@ -1,0 +1,21 @@
+diff --git a/src/system_core/libutils/include/utils/Vector.h b/src/system_core/libutils/include/utils/Vector.h
+index ddf71de24..feccfeb5e 100644
+--- a/src/system_core/libutils/include/utils/Vector.h
++++ b/src/system_core/libutils/include/utils/Vector.h
+@@ -256,11 +256,11 @@ Vector<TYPE>& Vector<TYPE>::operator = (const Vector<TYPE>& rhs) {
+     return *this;
+ }
+ 
+-template<class TYPE> inline
+-const Vector<TYPE>& Vector<TYPE>::operator = (const Vector<TYPE>& rhs) const {
+-    VectorImpl::operator = (static_cast<const VectorImpl&>(rhs));
+-    return *this;
+-}
++//template<class TYPE> inline
++//const Vector<TYPE>& Vector<TYPE>::operator = (const Vector<TYPE>& rhs) const {
++//    VectorImpl::operator = (static_cast<const VectorImpl&>(rhs));
++//    return *this;
++//}
+ 
+ template<class TYPE> inline
+ Vector<TYPE>& Vector<TYPE>::operator = (const SortedVector<TYPE>& rhs) {

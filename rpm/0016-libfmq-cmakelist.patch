@@ -1,8 +1,8 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
+diff --git a/src/libfmq/CMakeLists.txt b/src/libfmq/CMakeLists.txt
 new file mode 100644
 index 0000000..9635b8c
 --- /dev/null
-+++ b/CMakeLists.txt
++++ b/src/libfmq/CMakeLists.txt
 @@ -0,0 +1,17 @@
 +add_library(libfmq SHARED
 +        EventFlag.cpp

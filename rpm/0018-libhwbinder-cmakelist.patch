@@ -1,8 +1,8 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
+diff --git a/src/libhwbinder/CMakeLists.txt b/src/libhwbinder/CMakeLists.txt
 new file mode 100644
 index 0000000..96e60af
 --- /dev/null
-+++ b/CMakeLists.txt
++++ b/src/libhwbinder/CMakeLists.txt
 @@ -0,0 +1,25 @@
 +add_library(libhwbinder SHARED
 +	Binder.cpp

@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cf29c11..638f4e1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,6 +13,7 @@ find_package(Protobuf REQUIRED)
+ pkg_check_modules(CRYPTO REQUIRED libcrypto)
+ pkg_check_modules(TINYXML2 REQUIRED tinyxml2)
+ pkg_check_modules(LIBCAP REQUIRED libcap)
++pkg_check_modules(ANDROID_HEADERS REQUIRED android-headers)
+ #pkg_check_modules(SAFE_IOP REQUIRED safe-iop)
+ 
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
