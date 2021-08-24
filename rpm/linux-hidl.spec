@@ -14,6 +14,7 @@ BuildRequires:  openssl-devel
 BuildRequires:  tinyxml2-devel
 BuildRequires:  libcap-devel
 BuildRequires:  pkgconfig(android-headers)
+BuildRequires:  safe-iop
 Patch0:         0001-hidl-Add-building-and-generating-for-HIDL-headers-src-and.patch
 Patch1:         0002-hidl-Fix-bulding-on-gcc5.patch
 Patch2:         0003-hidl-MakeParentHierarchy-avoid-race-condition-between-sta.patch
